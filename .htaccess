@@ -1,0 +1,21 @@
+#######################
+# fuckflickr htaccezz #
+#######################
+
+## fun stuff
+#DirectoryIndex index.php index.html
+#Options +FollowSymLinks
+#Options -Indexes
+
+## for clean urls, uncomment all below lines
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} -f [OR]
+	RewriteCond %{REQUEST_FILENAME} -d
+	RewriteRule ^(.+) - [PT,L]
+
+	RewriteRule ^(.*) index.php
+
+	#RewriteCond %{HTTP:Authorization}  !^$
+	#RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]
+</IfModule>

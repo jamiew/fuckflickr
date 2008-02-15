@@ -1,0 +1,111 @@
+/* fuckflickr css */
+/* HACK AWAY MOFO */
+
+
+/******** general *******/
+body{
+	font-size:10px; 
+	font-family:Geneva,arial,sans;
+}
+
+a {
+	color: blue;
+}
+a:hover {
+  background-color: blue;
+  color: white;
+} 
+a:focus{
+	-moz-outline:none; 
+	outline:none;
+}
+
+input,form{
+	font-size:9px;
+}
+
+/******* layout *********/
+#header {
+  /* minimalist baby */
+  margin-bottom: 10px; /* ~= 3 br's */
+}
+#header a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+#header a:hover {
+  color: #fff; /* hacker inverse */
+  background-color: #000;
+}
+#header h1 {
+  margin: 0;
+  padding: 0;
+  display: inline;
+  font-size: 1em;
+}
+
+#main {
+ /* again... minimalism */ 
+}
+
+#settings {
+  float: right;
+  margin-right: 50px;
+}
+
+/******* gallery display ******/
+.thumb-contain{
+	width:300px; 
+	height:260px; 
+	float:left;
+	background-color:black; 
+}
+
+.thumb{
+	position:relative; 
+	top:0px; 
+	left:0px; 
+	width:300px; 
+	height:225px; 
+	overflow: hidden;
+	text-align:center; 
+	background-color:black; 
+	margin-right: 10px;
+}
+
+.preview{
+	position:relative; 
+	top:0px; 
+	left:0px; 
+	width:120px; 
+	height:90px; 
+	overflow: hidden;
+	text-align:center; 
+	background-color:black; 
+	margin-right: 10px;
+	float:left;
+}
+
+a.previewLink{
+	background-color:white; 
+	color:black;
+}
+
+
+.info{
+/*  width:300px; */ /* cascades from .thumb */
+	height:80px;
+	background-color:white;
+  font-size: 9px; /* non-gecko rendering engines actually go down to 1px, don't use that */	
+}
+
+.hi-res { margin-left: 5px; } /* give the man some elbow room geeze */
+.embed { margin-left: 8px; }
+
+
+
+
+
+
+
