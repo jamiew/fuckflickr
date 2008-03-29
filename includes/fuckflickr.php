@@ -23,13 +23,17 @@ class fuckflickr extends imageResize {
 		$this->timenow = time();
 	}
 
-	function viewLists($file = 'index.php') {
+	/*
+	*	actions to render
+	*/
+	function viewIndex($file = 'index.php') {
 		$this->readDir();
-		for ($i=0; $i<sizeof($this->ff_dirs); $i++) $this->readDirInfo($this->ff_dirs[$i], FF_DATA_DIR . $this->ff_dirs[$i]);
+		foreach($this->ff_dirs as $dir)
+			$this->readDirInfo($dir, FF_DATA_DIR.$dir);
 		$this->openTemplate($file);
 	}
 
-	function viewSet($file = 'set.php') {
+	function viewList($file = 'list.php') {
 		$this->readDir();
 		$this->processImages();
 		$this->readDirInfo($this->dir_name, $this->dir);
@@ -42,9 +46,15 @@ class fuckflickr extends imageResize {
 		$this->openTemplate($file);
 	}
 	
+	function viewRSS() { // not templatable (for now?)
+		$this->readDir();
+		$this->readDirInfo($this->dir_name, $this->dir);
+		include('rss.php');
+	}
+	
 
 	/*
-	*	main dispatcher
+	*	parse the request URI and/or POST/GET vars
 	*/
 	function processRequest() {
 		$this->parseRequest();
@@ -62,10 +72,77 @@ class fuckflickr extends imageResize {
 		$this->exclude = array('.', '..', $this->dir_origs, $this->web_dir, $this->thumb_dir, 'web', 'thumb', '.svn');
 		$this->exclude = array_merge($this->exclude, split(',', FF_EXCLUDE_DIRS)); // Combine with config'd excludes
 	}
-
+	
+	// ...
 	function makeDirName($dir) {
 		return substr($dir, 5);
 	}
+	
+	// process the URL into sweet, sweet information
+	function parseRequest() {
+		if (FF_CLEAN_URLS && empty($_REQUEST['dir'])) { // bail on dir queryvar, for dual-compatibility
+			$path = str_replace(dirname($_SERVER['PHP_SELF']), '', $_SERVER['REQUEST_URI']);
+			$path = preg_replace('/^\//', '', $path); // remove preceding slash
+			$path = preg_replace('/\?'. $_SERVER['QUERY_STRING'] .'/', '', $path); // Remove any phony GET queries
+			$paths = explode('/', $path);
+
+			$dir = (!empty($paths[0]) && is_dir(FF_DATA_DIR . $paths[0])) ? FF_DATA_DIR . $paths[0] : FF_DATA_DIR;
+			$dir .= (preg_match('/\/$/', $dir)) ? '' : '/'; // add trailing slash if necessary
+
+			// Create single array for requests
+			if(is_dir(FF_DATA_DIR . $paths[0])) array_shift($paths);
+			if(sizeof($paths) > 0) {
+				for($i=0; $i<sizeof($paths); $i+=2) {
+					if (!empty($paths[$i])) $this->reqs[$paths[$i]] = (isset($paths[$i+1])) ? $paths[$i+1] : true; // at least make true if set (ex. /d for debugging)
+				}
+			}
+		} else {
+			if (!empty($_REQUEST['dir'])) {
+				$prefix = preg_match('/^data/', $_REQUEST['dir']) ? '' : FF_DATA_DIR; // BACK COMPAT 07/11/22: no longer prefix messy URLs w/ DATA_DIR
+				$dir = $prefix . urldecode(stripslashes($_REQUEST['dir']));
+			} else {
+				$dir = FF_DATA_DIR;
+			}
+
+			// Create single array for requests
+			if (!empty($_SERVER['QUERY_STRING'])) {
+				$args = explode('&', $_SERVER['QUERY_STRING']);
+				if (sizeof($args) > 0) {
+					for ($i=0; $i<sizeof($args); $i++) {
+						list($k, $v) = explode('=', $args[$i]);
+						$this->reqs[$k] = $v;
+					}
+				}
+			}
+		}
+		
+		print "parsed dir = $dir".FF_NL;
+		$this->dir = $dir;
+	}
+
+	/*
+	* passing the directory in the URL is never a good idea
+	* so we check against as many possible hacks as possible.
+	**/
+	function cleanRequest() {
+
+		// common hax, hidden dirs, move dir cmds, etc.
+		if (strstr($this->dir,'.') || strstr($this->dir,'../') ||  strstr($this->dir,'../../') || strstr($this->dir,'/./') || strstr($this->dir, FF_DATA_DIR.'..') || strstr($this->dir,'.svn') ){
+			echo 'you entered an cheating url or your folder contains shady characters - change \'em out!';
+			exit;
+		}
+	
+		// don't allow *anything* w/ a dot
+		$testDir = explode('data', $this->dir);
+		if (strstr($testDir[1],'.')) {
+			echo "folders cannot have dots (.) in them";
+			exit;
+		}
+
+		// make sure dir has trailing slash
+		if (substr($this->dir, -1) != '/') $this->dir .= '/';
+	}
+
 
 	/*
 	*	resize all unresized images
@@ -129,8 +206,12 @@ class fuckflickr extends imageResize {
 		}		
 	}	
 	
+	/*
+	* start rendering out, including header/footer as available
+	* TODO: possibly allow rendering w/o a template, for non-standard output like AJAX/RSS/etc
+	*/
 	function openTemplate($file) {
-		if (is_file($this->dir_fs_tmpl .'header.php')) include($this->dir_fs_tmpl .'header.php');
+		if (is_file($this->dir_fs_tmpl .'header.php') && FF_USE_TEMPLATE) include($this->dir_fs_tmpl .'header.php');
 
 		if (is_dir($this->dir_fs_tmpl)) {
 			if (is_file($this->dir_fs_tmpl . $file)) {
@@ -142,68 +223,47 @@ class fuckflickr extends imageResize {
 			echo 'you need a place to hang your shit. add a fuckflickr template.';
 		}
 
-		if (is_file($this->dir_fs_tmpl .'footer.php')) include($this->dir_fs_tmpl .'footer.php');
+		if (is_file($this->dir_fs_tmpl .'footer.php') && FF_USE_TEMPLATE) include($this->dir_fs_tmpl .'footer.php');
 	}
-
-	function parseRequest() {
-		if (FF_CLEAN_URLS && empty($_REQUEST['dir'])) { // bail on dir queryvar, for dual-compatibility
-			$path = str_replace(dirname($_SERVER['PHP_SELF']), '', $_SERVER['REQUEST_URI']);
-			$path = preg_replace('/^\//', '', $path); // remove preceding slash
-			$path = preg_replace('/\?'. $_SERVER['QUERY_STRING'] .'/', '', $path); // Remove any phony GET queries
-			$paths = explode('/', $path);
-
-			$dir = (!empty($paths[0]) && is_dir(FF_DATA_DIR . $paths[0])) ? FF_DATA_DIR . $paths[0] : FF_DATA_DIR;
-			$dir .= (preg_match('/\/$/', $dir)) ? '' : '/'; // add trailing slash if necessary
-
-			// Create single array for requests
-			if (is_dir(FF_DATA_DIR . $paths[0])) array_shift($paths);
-			if (sizeof($paths) > 0) {
-				for ($i=0; $i<sizeof($paths); $i+=2) {
-					if (!empty($paths[$i])) $this->reqs[$paths[$i]] = (isset($paths[$i+1])) ? $paths[$i+1] : true; // at least make true if set (ex. /d for debugging)
-				}
-			}
-		} else {
-			if (!empty($_REQUEST['dir'])) {
-				$prefix = preg_match('/^data/', $_REQUEST['dir']) ? '' : FF_DATA_DIR; // BACK COMPAT 07/11/22: no longer prefix messy URLs w/ DATA_DIR
-				$dir = $prefix . urldecode(stripslashes($_REQUEST['dir']));
-			} else {
-				$dir = FF_DATA_DIR;
-			}
-
-			// Create single array for requests
-			if (!empty($_SERVER['QUERY_STRING'])) {
-				$args = explode('&', $_SERVER['QUERY_STRING']);
-				if (sizeof($args) > 0) {
-					for ($i=0; $i<sizeof($args); $i++) {
-						list($k, $v) = explode('=', $args[$i]);
-						$this->reqs[$k] = $v;
-					}
-				}
-			}
-		}
-
-		$this->dir = $dir;
-	}
-
-	function cleanRequest() {
-		//passing the directory is never a good idea
-		//so we check against as many possible hacks as possible.
-
-		if (strstr($this->dir,'.') || strstr($this->dir,'../') ||  strstr($this->dir,'../../') || strstr($this->dir,'/./') || strstr($this->dir, FF_DATA_DIR.'..') || strstr($this->dir,'.svn') ){
-			echo 'you entered an cheating url or your folder contains shady characters - change \'em out!';
-			exit;
-		}
 	
-		$testDir = explode('data', $this->dir);
-		if (strstr($testDir[1],'.')) {
-			echo "folders cannot have dots (.) in them";
-			exit;
-		}
-
-		// Make sure dir has trailing slash
-		if (substr($this->dir, -1) != '/') $this->dir .= '/';
+	/*
+	* generate URLs for internal routes
+	* clean or messy, as you like it
+	* TODO untested w/ messy URLs w/ all halvfet additions
+	*/
+	function urlFor($type, $what, $dir='', $etc='', $excl=false) {
+		$what = str_replace(FF_DATA_DIR, '', $what);
+		switch ($type) {
+			case 'dir':
+				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks($excl, ((!empty($etc)) ? ','. $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? ','. $etc : ''));
+				break;
+			case 'page':
+				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks('page', ((!empty($etc)) ? ','. $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? ','. $etc : ''));
+				break;
+			case 'original':
+				return $this->findURL() .'/'. $this->dir_origs . $what;
+				break;
+			case 'web';
+				return $this->findURL() .'/'. $this->dir_web . $what;
+				break;
+			case 'thumb';
+				return $this->findURL() .'/'. $this->dir_thumbs . $what;
+				break;
+			case 'indexThumb';
+				return $this->dir_root .'data/'. $dir . $what .'thumb/';
+				break;
+			case 'anchor':
+				return $this->urlFor('dir', $this->dir) .'#'. $what;
+				break;
+			default:
+				echo 'ERROR: bad url type \''. $type .'\' requested'. FF_BR;
+				return 'do-not-comprehenend-homey';
+				break;
+		}	
 	}
 
+
+	// get contents of a directory
 	function readDir() {
 		$rdir = dir($this->dir);
 		if ($rdir) {
@@ -243,11 +303,16 @@ class fuckflickr extends imageResize {
 		for($i = 0; $i < $is; $i++) $this->ff_items[$i] = $this->ff_items[$i][0];
 	}
 
-	function findURL() {
-		// dynamically pick up where we are.
+	// dynamically pick up where the application is installed
+	function findURL() {		
 		return (($_SERVER["HTTPS"] == 'on') ? 'https' : 'http') .'://'. $_SERVER["SERVER_NAME"] . (($_SERVER["SERVER_PORT"] != '80') ? $_SERVER["SERVER_PORT"] : '') . dirname($_SERVER['PHP_SELF']);
 	}
 
+	// list sorting
+	function sortDir() {usort($this->ff_dirs, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
+	function sortItems() {usort($this->ff_items, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
+
+	// comparison functions for above
 	function dateSort($a, $b) {return ($a[1] > $b[1]) ? -1 : 1;}
 	function nameSort($a, $b) {return ($a[0] > $b[0]) ? 1 : -1;}
 
@@ -257,9 +322,6 @@ class fuckflickr extends imageResize {
 		$l = strlen($str) - $i;
 		return substr($str,$i+1,$l);
 	}
-
-	function sortDir() {usort($this->ff_dirs, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
-	function sortItems() {usort($this->ff_items, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
 
 	function wordWrap($text, $len=15) {
 		if (empty($text)) return '';
@@ -274,39 +336,22 @@ class fuckflickr extends imageResize {
 		return $r;
 	}
 
+	// shortcut for generating navigation breadcrumbs / titles
 	function generateTitle() {
-		echo FF_NAME .' '. FF_IMG_TYPE . FF_SEPARATOR . (($this->dir != FF_DATA_DIR) ? str_replace( array('data/', '/', '_', '-'), '', $this->dir) : FF_DEFAULT_DIR_NAME) . FF_SEPARATOR . FF_ANTI_FLICKR_MSG;
+		echo FF_NAME .' '. FF_IMG_TYPE 
+		. FF_SEPARATOR 
+		. (($this->dir != FF_DATA_DIR) ? str_replace( array('data/', '/', '-', '_'), array('', '', ' ', ' '), $this->dir) : FF_DEFAULT_DIR_NAME) 
+		. FF_SEPARATOR . FF_ANTI_FLICKR_MSG;
 	}
-
-	function urlFor($type, $what, $dir='', $etc='', $excl=false) {
-		$what = str_replace(FF_DATA_DIR, '', $what);
-		switch ($type) {
-			case 'dir':
-				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks($excl, ((!empty($etc)) ? ','. $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? ','. $etc : ''));
-				break;
-			case 'page':
-				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks('page', ((!empty($etc)) ? ','. $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? ','. $etc : ''));
-				break;
-			case 'original':
-				return $this->findURL() .'/'. $this->dir_origs . $what;
-				break;
-			case 'web';
-				return $this->findURL() .'/'. $this->dir_web . $what;
-				break;
-			case 'thumb';
-				return $this->findURL() .'/'. $this->dir_thumbs . $what;
-				break;
-			case 'indexThumb';
-				return $this->dir_root .'data/'. $dir . $what .'thumb/';
-				break;
-			case 'anchor':
-				return $this->findURL() .'#'. $what;
-				break;
-			default:
-				echo 'ERROR: bad url type \''. $type .'\' requested'. FF_BR;
-				return 'do-not-comprehenend-homey';
-				break;
-		}	
+	
+	// shortcut for pagination links inside the theme
+	// can rewrite for your own theme
+	function pagination() {
+		$out = '';
+		if (FF_PER_PAGE > 0) 
+			$out .= '<p><strong>Page</strong>'.$this->pagesLinks(sizeof($this->ff_items), $this->dir, $this->dir_name).FF_NL;
+		$out .= '&ndash; viewing '.(($use_pages) ? ($ct_start+1) .'&ndash;'. $ct_end .' of' : 'all').' '.sizeof($this->ff_items).' items'.FF_NL;
+		return $out;
 	}
 
 	function makeReqLinks($excl=false, $incl=false) {
@@ -353,7 +398,8 @@ class fuckflickr extends imageResize {
 			$content = file_get_contents($dir . FF_DIR_INFO_FILENAME);
 			if (!empty($content)) {
 				$this->dir_info[$name] = $this->readYAML($content);
-				if (sizeof($this->ff_items) > 0 && sizeof($this->ff_items) != sizeof($this->dir_info[$name]['images']) && !$repeat) {
+				// if (sizeof($this->ff_items) > 0 && sizeof($this->ff_items) != sizeof($this->dir_info[$name]['images']) && !$repeat) {
+				if (sizeof($this->ff_items) > 0 && (!is_array($this->dir_info[$name][‘images’]) || sizeof($this->ff_items) != sizeof($this->dir_info[$name][‘images’])) && !$repeat) {
 					$this->makeYAML($name, $dir, $this->dir_info[$name]); // remake yaml file for new images if there are images in the items array
 				}
 			} else {
@@ -490,7 +536,9 @@ class imageResize {
 	}
 }
 
-
+/*
+* PHP4<=>5 backwards compat functions
+*/
 if (!function_exists('str_split')){
 	//Create a string split function for pre PHP5 versions
 	function str_split($str, $nr) {return array_slice(split("-l-", chunk_split($str, $nr, '-l-')), 0, -1);}

@@ -5,15 +5,14 @@
 ##	|   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
 ##	|__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
 ##############################################################
-* default fuckflickr theme
-* HACK AWAY MOFO              
+        default fuckflickr theme - HACK AWAY MOFO
 */
 
 
 /******** general *******/
 body {
-  font-size:10px; 
-  font-family:Geneva,arial,sans;
+  font-size: 10px; 
+  font-family: Geneva, Arial, sans-serif;
 }
 
 a {
@@ -39,12 +38,15 @@ p, h1, h2, h3, h4, h5 {
 
 
 /******* layout *********/
+#container {
+  min-width: 980px; /* 3 images wide; TODO doesn't work in IE */
+}
+
 #header {
   padding: 0px 20px 10px 20px;
 }
 #header a {
   text-decoration: none;
-  color: black;
   font-weight: bold;
 }
 #header a:hover {
@@ -98,18 +100,15 @@ p, h1, h2, h3, h4, h5 {
   clear: both; 
   padding: 20px 0;
 }
-#images:after { 
-/*  content: '.'; 
-  visibility: hidden; 
-  display: block;
-  clear: both; 
-  height: 0; 
-  font-size: 0; 
-  line-height: 0;  */
-}
+
 #dirs { /* ... */
   margin-top: 10px;
-}  
+}
+
+.pagination {
+  clear: both;
+}
+
 
 #footer {
   padding-top: 60px;
@@ -125,7 +124,6 @@ p, h1, h2, h3, h4, h5 {
   width: 300px; 
   min-height: 260px;  /* FIXME does not work in IE6 (do we care?) */
   float: left;
-  background-color: black;
   margin-right: 10px;
 }
 
@@ -136,8 +134,8 @@ p, h1, h2, h3, h4, h5 {
   width: 300px; 
   height: 225px; 
   overflow: hidden;
-  text-align:center; 
-  background-color:black; 
+  text-align: center; 
+  background-color: black; 
   margin-right: 10px;
 }
 
@@ -167,7 +165,7 @@ p, h1, h2, h3, h4, h5 {
 }
 
 .info {
-  min-height:80px;
+/*  min-height:80px;*/
   background-color:white;
   font-size: 9px; /* non-gecko rendering engines actually go down to 1px; don't use that */ 
 }

@@ -7,12 +7,13 @@
 ##############################################################
 
 include_once('includes/fuckflickr.php');
-include_once('includes/config.php');
+include_once('config.php');
 
+// redeclare/sanitize configuration vars
 // FIXME TODO: this is *extremely* heinous
+// we should choose globals or define
 define('FF_NAME', $NAME);
 define('FF_ANTI_FLICKR_MSG', $ANTI_FLICKR_MSG);
-define('FF_IMG_TYPE', $IMG_TYPE);
 define('FF_SEPARATOR', $SEPARATOR);
 define('FF_DEFAULT_DIR_NAME', $DEFAULT_DIR_NAME);
 define('FF_LINK', $LINK);
@@ -27,16 +28,19 @@ define('FF_IMG_QUALITY', ($IMAGE_QUALITY > 0 && $IMAGE_QUALITY <= 5) ? $IMAGE_QU
 define('FF_PER_PAGE', (is_numeric($IMAGES_PAGE) && $IMAGES_PAGE > 0) ? floor($IMAGES_PAGE) : 0);
 define('FF_USE_TEMPLATE', (!empty($TEMPLATE)) ? $TEMPLATE . ((substr($TEMPLATE, -1, 1) != '/') ? '/' : '') : 'fuckflickr/');
 
+// initialize environment
 $fuckflickr = new fuckflickr();
 $fuckflickr->processRequest();
 
-// Determine page to use
-if (isset($fuckflickr->reqs['photo']) && !empty($fuckflickr->reqs['photo'])) {
+// main dispatcher: based on parsed request, decide what to do
+if( isset($fuckflickr->reqs['photo']) && !empty($fuckflickr->reqs['photo']) ) {
 	$fuckflickr->viewPhoto();
-} elseif ($fuckflickr->dir != FF_DATA_DIR) {
-	$fuckflickr->viewSet();
-} else {
-	$fuckflickr->viewLists();
+} elseif( !empty($fuckflickr->reqs['rss']) ) {
+	$fuckflickr->viewRSS();
+} elseif( $fuckflickr->dir != FF_DATA_DIR ) {
+	$fuckflickr->viewList();
+} else { // index page is default action; also, dir will = 
+	$fuckflickr->viewIndex();
 }
 
 ?>

@@ -249,7 +249,7 @@ function tb_show(caption, url, imageGroup) {//function called when the user clic
 			
 		}
 
-		if(!params['modal']){
+		if(params && !params['modal']){
 			document.onkeyup = function(e){ 	
 				if (e == null) { // ie
 					keycode = event.keyCode;

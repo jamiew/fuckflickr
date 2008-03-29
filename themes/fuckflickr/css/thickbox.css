@@ -26,12 +26,12 @@
 /* ---------->>> thickbox settings <<<-----------------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------------------------------------------------*/
 #TB_overlay {
-	position: fixed;
-	z-index:100;
-	top: 0px;
-	left: 0px;
-	height:100%;
-	width:100%;
+  position: fixed;
+  z-index:100;
+  top: 0px;
+  left: 0px;
+  height:100%;
+  width:100%;
 
   /* tint it? */ /*
   background-color: #000;
@@ -57,7 +57,7 @@
 	z-index: 102;
 	color:#000000;
 	display:none;
-	border: 4px solid #525252;
+	border: 2px solid #ff0085;
 	text-align:left;
 	top:50%;
 	left:50%;
@@ -135,8 +135,8 @@
 }
 
 * html #TB_load { /* ie6 hack */
-position: absolute;
-margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+  position: absolute;
+  margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
 }
 
 #TB_HideSelect{
@@ -154,8 +154,8 @@ margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = d
 }
 
 * html #TB_HideSelect { /* ie6 hack */
-     position: absolute;
-     height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+  position: absolute;
+  height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
 }
 
 #TB_iframeContent{
