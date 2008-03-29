@@ -12,43 +12,48 @@ class fuckflickr extends imageResize {
 	var $ff_dirs = array();
 	var $ff_vals = array();
 
+	/*
+	* constructor & dispatcher
+	*/
 	function fuckflickr() {
+	
+		// figure out what's going on
 		$this->dir_root = $this->findURL() .'/';
-
 		$this->dir_incl = $this->dir_root .'includes/';
 		$this->dir_fs_tmpl = FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
 		$this->dir_tmpl = $this->dir_root . FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
 		$this->sortDir = true;
 		$this->ff_total = 0;
 		$this->timenow = time();
+
+		// kick off this mother
+		$this->processRequest();
+		$this->readDir(); // read this dir
+		$this->processImages(); // parse imgz
+		foreach(array_merge( array($this->dir_name), $this->ff_dirs) as $dir) {
+			// $this->readDirInfo($this->dir_name, $this->dir);
+			$this->readDirInfo($dir, FF_DATA_DIR.$dir);
+		}
+
 	}
 
 	/*
 	*	actions to render
+	* TODO probably don't even need these anymore
 	*/
 	function viewIndex($file = 'index.php') {
-		$this->readDir();
-		foreach($this->ff_dirs as $dir)
-			$this->readDirInfo($dir, FF_DATA_DIR.$dir);
 		$this->openTemplate($file);
 	}
 
 	function viewList($file = 'list.php') {
-		$this->readDir();
-		$this->processImages();
-		$this->readDirInfo($this->dir_name, $this->dir);
 		$this->openTemplate($file);
 	}
 
 	function viewPhoto($file = 'photo.php') {
-		$this->readDir();
-		$this->readDirInfo($this->dir_name, $this->dir);
 		$this->openTemplate($file);
 	}
 	
 	function viewRSS() { // not templatable (for now?)
-		$this->readDir();
-		$this->readDirInfo($this->dir_name, $this->dir);
 		include('rss.php');
 	}
 	
@@ -116,7 +121,6 @@ class fuckflickr extends imageResize {
 			}
 		}
 		
-		print "parsed dir = $dir".FF_NL;
 		$this->dir = $dir;
 	}
 
@@ -416,10 +420,12 @@ class fuckflickr extends imageResize {
 	function makeYAML($name='', $dir='', $info=false) {
 		$content = 'directory:'. FF_NL . FF_SPACES .'title:'. ((isset($info['directory']['title'])) ? $info['directory']['title'] : $name) . FF_NL . FF_SPACES .'desc:'. $info['directory']['desc'] . FF_NL .'images:'. FF_NL;
 
-		// Go through each image;
-		foreach ($this->ff_items as $v) $content .= FF_SPACES . $v .':'. FF_NL . str_repeat(FF_SPACES, 2) . 'title:'. (isset($info['images'][$v]['title']) ? $info['images'][$v]['title'] : '') . FF_NL . str_repeat(FF_SPACES, 2) . 'desc:'. (isset($info['images'][$v]['desc']) ? $info['images'][$v]['desc'] : '') . FF_NL . str_repeat(FF_SPACES, 2) . 'tags:'. (isset($info['images'][$v]['tags']) ? $info['images'][$v]['tags'] : '') .FF_NL;
+		// go through each image
+		foreach ($this->ff_items as $v) 
+			$content .= FF_SPACES . $v .':'. FF_NL . str_repeat(FF_SPACES, 2) . 'title:'. (isset($info['images'][$v]['title']) ? $info['images'][$v]['title'] : '') . FF_NL . str_repeat(FF_SPACES, 2) . 'desc:'. (isset($info['images'][$v]['desc']) ? $info['images'][$v]['desc'] : '') . FF_NL . str_repeat(FF_SPACES, 2) . 'tags:'. (isset($info['images'][$v]['tags']) ? $info['images'][$v]['tags'] : '') .FF_NL;
 
-		if ($r = fopen($dir . FF_DIR_INFO_FILENAME, 'w+')) {
+		// open directory info yaml
+		if ($r = @fopen($dir . FF_DIR_INFO_FILENAME, 'w+')) {
 			if ($this->debug) echo 'making directory info file'. FF_BR;
 			fwrite($r, $content);
 			fclose($r);

@@ -23,9 +23,8 @@ if (sizeof($this->ff_items) > 0):
 <div id="images">
 <?php
 $images = $this->ff_items;
-if($use_pages)  
+if($use_pages)  //slice if we're paginating
 	$images = array_splice($images, $ct_start, FF_PER_PAGE);
-
 foreach($images as $image):
 	$shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
 ?>

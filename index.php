@@ -30,7 +30,6 @@ define('FF_USE_TEMPLATE', (!empty($TEMPLATE)) ? $TEMPLATE . ((substr($TEMPLATE, 
 
 // initialize environment
 $fuckflickr = new fuckflickr();
-$fuckflickr->processRequest();
 
 // main dispatcher: based on parsed request, decide what to do
 if( isset($fuckflickr->reqs['photo']) && !empty($fuckflickr->reqs['photo']) ) {
