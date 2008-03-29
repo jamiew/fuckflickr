@@ -2,15 +2,27 @@ directory:
     title:JPEG, GIF & PNG Test
     desc:Testing new functionality for different type of GIFs and PNGs, as well as the standard JPEG.
 images:
-    spring1_wide.jpg:
+    gif.gif:
         title:
         desc:
         tags:
-    snick.jpg:
+    png8.png:
         title:
         desc:
         tags:
-    star.jpg:
+    jpg.jpg:
+        title:
+        desc:
+        tags:
+    png24.png:
+        title:
+        desc:
+        tags:
+    png.png:
+        title:
+        desc:
+        tags:
+    transparentgif.gif:
         title:
         desc:
         tags:
