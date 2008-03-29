@@ -1,0 +1,180 @@
+/*
+##############################################################
+##   ___              __     ___ __ __        __            ##
+##	.'  _|.--.--.----.|  |--.'  _|  |__|.----.|  |--.----.  ##
+##	|   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
+##	|__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
+##############################################################
+* default fuckflickr theme
+* HACK AWAY MOFO              
+*/
+
+
+/******** general *******/
+body {
+  font-size:10px; 
+  font-family:Geneva,arial,sans;
+}
+
+a {
+  color: blue;
+}
+a:hover {
+  background-color: #ff0085;
+  color: white;
+} 
+a:focus{
+  -moz-outline:none; 
+  outline:none;
+}
+
+input,form{
+  font-size:9px;
+}
+
+p, h1, h2, h3, h4, h5 { 
+  margin: 0; 
+  padding: 2px 0; 
+}
+
+
+/******* layout *********/
+#header {
+  padding: 0px 20px 10px 20px;
+}
+#header a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+#header a:hover {
+  color: white; /* gone but not forgotten */
+}
+
+#header h1 {
+  margin: 0;
+  padding: 0;
+  display: inline;
+  clear: both;
+  font-size: 1em;
+}
+
+#header #logo a {
+  border: 1px solid transparent;
+}
+#header #logo a:hover {
+  border: 1px solid #f0f;
+}
+#header #logo, /* humping graphic */
+#header #fuckflickr-info { /* "why we should boycott..." */
+  float: left;
+}
+#header #fuckflickr-info {
+  color: #ff0085;
+  margin: 25px 0 0 30px;
+  width: 270px;
+}
+
+#main {
+ padding: 0 20px 20px 20px;
+}
+
+#settings {
+  float: right;
+  margin: 25px 10% 0 20px;
+}
+
+#navigation {
+  clear: both;
+  font-size: 13pt;
+  background-color: #ffffaa;
+  padding: 10px 0 10px 20px;
+}
+
+#pages { 
+  clear: both;
+}
+#images { 
+  clear: both; 
+  padding: 20px 0;
+}
+#images:after { 
+/*  content: '.'; 
+  visibility: hidden; 
+  display: block;
+  clear: both; 
+  height: 0; 
+  font-size: 0; 
+  line-height: 0;  */
+}
+#dirs { /* ... */
+  margin-top: 10px;
+}  
+
+#footer {
+  padding-top: 60px;
+  clear: both;
+  color: #999;
+}
+
+
+
+/******* gallery display ******/
+
+.thumb-wrapper {
+  width: 300px; 
+  min-height: 260px;  /* FIXME does not work in IE6 (do we care?) */
+  float: left;
+  background-color: black;
+  margin-right: 10px;
+}
+
+.thumb {
+  position:relative; 
+  top: 0px; 
+  left: 0px; 
+  width: 300px; 
+  height: 225px; 
+  overflow: hidden;
+  text-align:center; 
+  background-color:black; 
+  margin-right: 10px;
+}
+
+.preview a { /* given a background-image dynamically */
+  float: left;
+  position: relative; 
+  top: 0px; 
+  left: 0px; 
+  border: 5px solid transparent; /* pimped out on hover */
+  width: 110px;  /* 120px - 2*border */
+  min-height: 70px; /* 80px - 2*border */
+  background-position: -5px -5px;
+  overflow: hidden;
+  text-align: center; 
+  background-color: black;
+  margin-right: 6px;
+  padding-top: 10px;
+}
+.preview a:hover {
+  border: 5px solid #ff0085;
+}
+
+.preview span { /* the actual text of the preview */
+  background-color: white; 
+  color: black;
+  padding: 2px 4px;
+}
+
+.info {
+  min-height:80px;
+  background-color:white;
+  font-size: 9px; /* non-gecko rendering engines actually go down to 1px; don't use that */ 
+}
+
+.hi-res { margin-left: 5px; } /* give the man some elbow room geeze */
+.embed { margin-left: 8px; }
+
+
+
+

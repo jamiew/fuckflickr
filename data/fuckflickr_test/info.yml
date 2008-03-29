@@ -1,0 +1,16 @@
+directory:
+    title:JPEG, GIF & PNG Test
+    desc:Testing new functionality for different type of GIFs and PNGs, as well as the standard JPEG.
+images:
+    spring1_wide.jpg:
+        title:
+        desc:
+        tags:
+    snick.jpg:
+        title:
+        desc:
+        tags:
+    star.jpg:
+        title:
+        desc:
+        tags:
