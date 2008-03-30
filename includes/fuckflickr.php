@@ -91,7 +91,7 @@ class fuckflickr extends imageResize {
 			$path = preg_replace('/\?'. $_SERVER['QUERY_STRING'] .'/', '', $path); // Remove any phony GET queries
 			$paths = explode('/', $path);
 
-			$dir = (!empty($paths[0]) && is_dir(FF_DATA_DIR . $paths[0])) ? FF_DATA_DIR . $paths[0] : FF_DATA_DIR;
+			$dir = (!empty($paths[0]) && is_dir(FF_DATA_DIR . $paths[0])) ? FF_DATA_DIR . join('/', $paths) : FF_DATA_DIR;
 			$dir .= (preg_match('/\/$/', $dir)) ? '' : '/'; // add trailing slash if necessary
 
 			// Create single array for requests
@@ -101,7 +101,9 @@ class fuckflickr extends imageResize {
 					if (!empty($paths[$i])) $this->reqs[$paths[$i]] = (isset($paths[$i+1])) ? $paths[$i+1] : true; // at least make true if set (ex. /d for debugging)
 				}
 			}
-		} else {
+		
+		} else { // messy URL parsing
+			
 			if (!empty($_REQUEST['dir'])) {
 				$prefix = preg_match('/^data/', $_REQUEST['dir']) ? '' : FF_DATA_DIR; // BACK COMPAT 07/11/22: no longer prefix messy URLs w/ DATA_DIR
 				$dir = $prefix . urldecode(stripslashes($_REQUEST['dir']));
@@ -121,6 +123,7 @@ class fuckflickr extends imageResize {
 			}
 		}
 		
+		// set it and move on
 		$this->dir = $dir;
 	}
 
@@ -230,16 +233,18 @@ class fuckflickr extends imageResize {
 		if (is_file($this->dir_fs_tmpl .'footer.php') && FF_USE_TEMPLATE) include($this->dir_fs_tmpl .'footer.php');
 	}
 	
+
+	
 	/*
 	* generate URLs for internal routes
 	* clean or messy, as you like it
-	* TODO untested w/ messy URLs w/ all halvfet additions
+	* TODO untested w/ messy URLs with new halvfet code
 	*/
 	function urlFor($type, $what, $dir='', $etc='', $excl=false) {
 		$what = str_replace(FF_DATA_DIR, '', $what);
 		switch ($type) {
 			case 'dir':
-				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks($excl, ((!empty($etc)) ? ','. $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? ','. $etc : ''));
+				return (FF_CLEAN_URLS) ? $this->dir_root.$dir.$this->cleanPath($what) /*. $this->makeReqLinks($excl, ((!empty($etc)) ? ','. $etc : ''))*/ : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? ','. $etc : ''));
 				break;
 			case 'page':
 				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks('page', ((!empty($etc)) ? ','. $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? ','. $etc : ''));
@@ -265,6 +270,15 @@ class fuckflickr extends imageResize {
 				break;
 		}	
 	}
+	
+	// clean up directory names, removing "/data", leading/trailing slashes, etc.
+	function cleanPath($path) { // FIXME DRY
+		if(empty($path)) return '';
+		// $path = str_replace(FF_DATA_DIR, '', );
+		return preg_replace('/^\//', '', preg_replace('/\/$/', '', $path) );
+	}
+	
+
 
 
 	// get contents of a directory

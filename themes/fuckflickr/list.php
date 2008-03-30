@@ -20,11 +20,25 @@ if (sizeof($this->ff_items) > 0):
 
 <div class="pagination"><?php print $this->pagination() ?></div>
 
+
+<?php if(!empty($this->ff_dirs)): ?>
+<div id="directories">
+<?php foreach($this->ff_dirs as $dir): ?>
+	<div class="directory">
+		<a href="<?php print $this->urlFor('dir', $this->dir_name.$dir) ?>"><?php print $dir ?></a>
+	</div>
+<?php endforeach; ?>
+	<br class="clear" />
+</div> <!-- /#directories -->
+<?php endif; ?>
+
+
 <div id="images">
 <?php
 $images = $this->ff_items;
 if($use_pages)  //slice if we're paginating
 	$images = array_splice($images, $ct_start, FF_PER_PAGE);
+
 foreach($images as $image):
 	$shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
 ?>

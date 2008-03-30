@@ -120,6 +120,31 @@ p, h1, h2, h3, h4, h5 {
 
 /******* gallery display ******/
 
+#directories {
+ margin-top: 10px;
+ padding: 5px 10px;
+ min-height: 25px;
+}
+
+.directory a {
+/*  width: 100px;*/
+/*  height: 20px;*/
+  background: #efe url('../images/folder.png') no-repeat 0 50%;
+  border: 1px solid #d0f5d0;
+  padding: 15px 10px 15px 40px;
+  float: left;
+  margin-right: 10px;
+}
+.directory a:hover {
+  background-color: #ff0085;
+  border: 1px solid #000;
+}
+
+
+#images {
+ /* ... */
+}
+
 .thumb-wrapper {
   width: 300px; 
   min-height: 260px;  /* FIXME does not work in IE6 (do we care?) */
@@ -153,6 +178,7 @@ p, h1, h2, h3, h4, h5 {
   background-color: black;
   margin-right: 6px;
   padding-top: 10px;
+  text-decoration: none;
 }
 .preview a:hover {
   border: 5px solid #ff0085;

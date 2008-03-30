@@ -9,15 +9,15 @@ $begintime = $time;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!--
-	##############################################################
-	##		___              __     ___ __ __        __           ##
-	##	.'  _|.--.--.----.|  |--.'  _|  |__|.----.|  |--.----.  ##
-	##	|   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
-	##	|__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
-	##############################################################
--->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--
+##############################################################
+##    ___              __     ___ __ __        __           ##
+##  .'  _|.--.--.----.|  |--.'  _|  |__|.----.|  |--.----.  ##
+##  |   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
+##  |__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
+##############################################################
+-->
 <head>
 	<title><?php $this->generateTitle(); ?></title>
 
@@ -64,8 +64,16 @@ $begintime = $time;
 		<!-- regular title -->
 		<a href="<?php echo $this->dir_root ?>"><?php echo FF_NAME ?></a>
 		<?php 
-		if ($this->dir != FF_DATA_DIR) 
-			echo ' / <a href="'. $this->urlFor('dir', str_replace(FF_DATA_DIR, '', $this->dir)).'">'.preg_replace('/\/$/', '', str_replace(FF_DATA_DIR, '', $this->dir)).'</a>'; 
+		// TODO clean this up. could use a directory(), parent(), breadcrumbs(), navigation() etc.
+		if ($this->dir != FF_DATA_DIR)
+			$parent = str_replace(FF_DATA_DIR, '', $this->dir);
+			$built = '';
+			foreach(explode('/', str_replace(FF_DATA_DIR, '', $this->dir)) as $dir) {
+				if(empty($dir)) continue;
+				$url = $this->urlFor( 'dir', $built.'/'.$this->cleanPath($dir) ); // third var behaving strangely
+				print ' / <a href="'.$url.'">'.$dir.'</a>'; 
+				$built .= '/'.$dir;
+			}
 		?>
 	</div>
 
