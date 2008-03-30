@@ -22,7 +22,7 @@ define('FF_CLEAN_URLS', $CLEAN_URLS);
 define('FF_CC_LICENSE', $CC_LICENSE);
 define('FF_LIGHTBOX_DEFAULT', $LIGHTBOX_DEFAULT);
 define('FF_EXCLUDE_DIRS', $EXCLUDE_DIRS);
-define('FF_INDEX_THUMB_NAME', 'dir_image.jpg');
+define('FF_INDEX_THUMB_NAME', 'dir_thumb.jpg');
 define('FF_DIR_INFO_FILENAME', 'info.yml');
 define('FF_IMG_QUALITY', ($IMAGE_QUALITY > 0 && $IMAGE_QUALITY <= 5) ? $IMAGE_QUALITY : 3);
 define('FF_PER_PAGE', (is_numeric($IMAGES_PAGE) && $IMAGES_PAGE > 0) ? floor($IMAGES_PAGE) : 0);
