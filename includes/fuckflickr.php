@@ -356,7 +356,7 @@ class fuckflickr extends imageResize {
 
 	// shortcut for generating navigation breadcrumbs / titles
 	function generateTitle() {
-		echo FF_NAME .' '. FF_IMG_TYPE 
+		echo FF_NAME .' ' 
 		. FF_SEPARATOR 
 		. (($this->dir != FF_DATA_DIR) ? str_replace( array('data/', '/', '-', '_'), array('', '', ' ', ' '), $this->dir) : FF_DEFAULT_DIR_NAME) 
 		. FF_SEPARATOR . FF_ANTI_FLICKR_MSG;

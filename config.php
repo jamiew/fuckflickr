@@ -7,7 +7,7 @@
 ##############################################################
 
 // name your fflickr install
-$NAME = "F.A.T";
+$NAME = "F.A.T PHOTOS";
 
 // URL to your fuckflickr system, with trailing slash
 // (optional, should autodetect just fine)
