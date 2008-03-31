@@ -56,7 +56,7 @@ class fuckflickr extends imageResize {
 		// some new ish. this should definitely be remedied
 
 		$this->ff_items = $this->findFiles($this->dir);
-		usort($this->ff_items, create_function('$a, $b', 'return filemtime($a) > filemtime($b);'));
+		usort($this->ff_items, create_function('$a, $b', 'return @filemtime($a) > @filemtime($b);'));
 		$this->ff_items = array_splice($this->ff_items, $ct_start, FF_RSS_ITEM_COUNT);
 		include('rss.php');
 	}
