@@ -22,7 +22,6 @@ $(document).ready(function(){
   // $("#main img").lazyload({ /*placeholder : "/fatlab/fuckflickr/images/grey.gif"*/ });
 	
   // animated anchor scroll-to
-  /*
   $('a[href*=#]').click(function() {
     if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
     && location.hostname == this.hostname) {
@@ -37,7 +36,6 @@ $(document).ready(function(){
       }
     }
   });
-  */
   
 });
 

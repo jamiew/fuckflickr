@@ -29,12 +29,6 @@ $CC_LICENSE = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-
 // your anti flickr message for the title & footer of each page
 $ANTI_FLICKR_MSG = "FUCK FLICKR";
 
-// type of imagery
-$IMG_TYPE = 'PHOTOS';
-
-// default directory viewing name
-$DEFAULT_DIR_NAME = 'PHOTO SETS';
-
 // separator for title
 $SEPARATOR = ' &ndash; ';
 
@@ -56,15 +50,18 @@ $EXCLUDE_DIRS = "secret,top_secret";
 $IMAGE_QUALITY = 3;
 
 // number of photos per page
-$IMAGES_PAGE = 10;
+// $IMAGES_PER_PAGE = 10; // trunk ~r34, not currently working
+$IMAGES_PER_PAGE = 0;
 
-// template directory - in case you wanna go wildstyle (keep the ending /)
-$TEMPLATE = 'fuckflickr/';
+// what's yr theme? (keep the trailing slash)
+$THEME = 'fuckflickr/';
 
 
 // ------------------
 
 define(FF_DATA_DIR, 'data/');
+define(FF_DATA_THUMB_DIR, 'thumb/');
+define(FF_DATA_WEB_DIR, 'web/');
 define(FF_TEMPLATE_DIR, 'themes/');
 
 define(FF_NL, "\n"); // helpers

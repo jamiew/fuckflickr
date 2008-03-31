@@ -1,16 +1,36 @@
 directory:
-    title:JPEG, GIF & PNG Test
-    desc:Testing new functionality for different type of GIFs and PNGs, as well as the standard JPEG.
+    title:fuckflickr_test/
+    desc:
 images:
-    snick.jpg:
+    jpg.jpg:
         title:
         desc:
         tags:
-    spring1_wide.jpg:
+    png.png:
         title:
         desc:
         tags:
-    star.jpg:
+    transparentgif.gif:
+        title:
+        desc:
+        tags:
+    png8.png:
+        title:
+        desc:
+        tags:
+    gif.gif:
+        title:
+        desc:
+        tags:
+    png24.png:
+        title:
+        desc:
+        tags:
+    img_34.gif:
+        title:
+        desc:
+        tags:
+    img_33.gif:
         title:
         desc:
         tags:

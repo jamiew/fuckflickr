@@ -93,16 +93,10 @@ p, h1, h2, h3, h4, h5 {
   padding: 10px 0 10px 20px;
 }
 
-#pages { 
-  clear: both;
-}
-#images { 
-  clear: both; 
-  padding: 20px 0;
-}
-
-#dirs { /* ... */
-  margin-top: 10px;
+.rss {
+  float: right;
+  margin-right: 35px;
+  margin-top: -2px;
 }
 
 .pagination {
@@ -115,6 +109,7 @@ p, h1, h2, h3, h4, h5 {
   clear: both;
   color: #999;
 }
+
 
 
 
@@ -142,7 +137,8 @@ p, h1, h2, h3, h4, h5 {
 
 
 #images {
- /* ... */
+  clear: both; 
+  padding: 20px 0;
 }
 
 .thumb-wrapper {

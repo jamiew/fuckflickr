@@ -12,15 +12,18 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 		<language>en-us<?php // TODO in8l me ?></language>
 		<generator>FuckFlickr</generator>
 		<?php
-		$images = $images = $this->ff_items;
-		$images = array_splice($images, $ct_start, FF_PER_PAGE); // TODO use a diff option for RSS
-		foreach($images as $image):
-			$shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
+		foreach($this->ff_items as $image):
+			print "image = $image".FF_BR;
+			$dir = FF_DATA_DIR.preg_replace('/^\//', '', dirname(str_replace(FF_DATA_DIR, '', $image))).'/';
+			$file = basename($image);
+			print "dir = $dir ... file = $file".FF_BR;
+			// $shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
+			$title = $file;
 		?>
 		<item>
-			<guid><?php print $this->urlFor('original', $image); ?></guid>
-			<link><?php print $this->urlFor('original', $image); ?></link>
-			<title><?php print $shortName; ?></title>
+			<guid><?php print $this->urlFor('original', $file, $dir); ?></guid>
+			<link><?php print $this->urlFor('original', $file, $dir); ?></link>
+			<title><?php print $title; ?></title>
 			<pubDate><?php print time(); // FIME ?></pubDate>
 			<?php /*
 				<enclosure type="video/quicktime" url="http://www.rocketboom.com/video/rb_08_mar_28.mov" length="25512412" />
@@ -28,10 +31,10 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 			*/
 			?>
 			<description><![CDATA[
-				<a href="<?php print $this->urlFor('web', $image) ?>" title="<?php print $shortName ?>"><img src="<?php print $this->urlFor('thumb', $image) ?>" alt="<?php print $shortName ?>" border="0" /></a>
-				<p><?php print $this->wordWrap($this->dir_info[$this->dir_name]['images'][$image]['desc'], 15) ?></p>]]>
+				<a href="<?php print $this->urlFor('web', $file, $dir) ?>" title="<?php print $title ?>"><img src="<?php print $this->urlFor('thumb', $file, $dir) ?>" alt="<?php print $title ?>" border="0" /></a>
+				<p><?php print wordWrap($this->dir_info[$this->dir_name]['images'][$image]['desc'], 15) ?></p>]]>
 			</description>
 		</item>
-		<?php endforeach ?>
+		<?php endforeach; ?>
 	</channel>
 </rss>

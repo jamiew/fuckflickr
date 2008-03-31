@@ -4,7 +4,7 @@
 // including its images and subdirectories
 
 // do we have files?
-if (sizeof($this->ff_items) > 0):
+if (!empty($this->ff_items) || !empty($this->ff_dirs)):
 
 	// are we paginating?
 	$use_pages = (FF_PER_PAGE > 0 && sizeof($this->ff_items) > FF_PER_PAGE && $this->cur_page != 'all');
@@ -23,12 +23,13 @@ if (sizeof($this->ff_items) > 0):
 
 <?php if(!empty($this->ff_dirs)): ?>
 <div id="directories">
-<?php foreach($this->ff_dirs as $dir): ?>
-	<div class="directory">
-		<a href="<?php print $this->urlFor('dir', $this->dir_name.$dir) ?>"><?php print $dir ?></a>
+	<?php foreach($this->ff_dirs as $dir): ?>	
+	<div class="preview">
+		<a href="<?php echo $this->urlFor('dir', $dir, $this->dir_name) ?>" style="background-image: url(<?php echo $this->urlFor('indexThumb', $dir, $this->dir_name) . FF_INDEX_THUMB_NAME ?>);">
+			<span><?php echo ((!empty($this->dir_info[$dir]['directory']['title'])) ? $this->dir_info[$dir]['directory']['title'] : str_replace(array('/', '_', '-'), array('', ' ', ' '), $dir)) ?></span>
+		</a>
 	</div>
-<?php endforeach; ?>
-	<br class="clear" />
+	<?php endforeach; ?>
 </div> <!-- /#directories -->
 <?php endif; ?>
 
@@ -49,7 +50,7 @@ foreach($images as $image):
 			<a target="_blank" rel="lightbox" title="<?php echo $shortName ?>" href="<?php echo $this->urlFor('web', $image) ?>"><img src="<?php echo $this->urlFor('thumb', $image) ?>" alt="<?php echo $shortName ?>" title="<?php echo $shortName ?>" border="0" /></a>
 		</div>
 		<div class="info">
-		 <span class="description"><?php echo $this->wordWrap($this->dir_info[$this->dir_name]['images'][$image]['desc'], 15) ?></span>
+		 <span class="description"><?php echo wordWrap($this->dir_info[$this->dir_name]['images'][$image]['desc'], 15) ?></span>
 		 <p class="meta"><a class="short-name" href="#<?php echo $shortName ?>">#</a> 
 			<a class="hi-res" href="<?php echo $this->urlFor('original', $image) ?>">Hi-Res Image</a>
 		 	<span class="embed">embed <input class="embed-code" type="text" size="24" value="<?php echo htmlentities('<a href="'. $this->urlFor('anchor', $shortName) .'"><img src="'. $this->urlFor('web', $image).'" alt="'.$shortName.'" title="'.$shortName.'" border="0" /></a>') ?>" /></span><br />

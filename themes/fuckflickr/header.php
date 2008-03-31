@@ -19,7 +19,9 @@ $begintime = $time;
 ##############################################################
 -->
 <head>
-	<title><?php $this->generateTitle(); ?></title>
+	<title><?php $this->pageTitle(); ?></title>
+
+	<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="<?php print $this->urlFor('rss', $this->dir); ?>" />
 
 	<link href="<?php echo $this->dir_tmpl ?>css/stylesheet.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
 	<link href="<?php echo $this->dir_tmpl ?>css/thickbox.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
@@ -61,6 +63,9 @@ $begintime = $time;
 	</div> <!-- /#header -->
 
 	<div id="navigation">
+		<!-- rss -->
+		<a href="<?php print $this->urlFor('rss', $this->dir); ?>" title="RSS feed of new adds" class="rss"><img src="<?php echo $this->dir_tmpl ?>/images/feed-icon32x32.png" border="0" /></a>		
+		
 		<!-- regular title -->
 		<a href="<?php echo $this->dir_root ?>"><?php echo FF_NAME ?></a>
 		<?php 
@@ -70,7 +75,7 @@ $begintime = $time;
 			$built = '';
 			foreach(explode('/', str_replace(FF_DATA_DIR, '', $this->dir)) as $dir) {
 				if(empty($dir)) continue;
-				$url = $this->urlFor( 'dir', $built.'/'.$this->cleanPath($dir) ); // third var behaving strangely
+				$url = $this->urlFor( 'dir', $built.'/'.cleanDirname($dir) ); // third var behaving strangely
 				print ' / <a href="'.$url.'">'.$dir.'</a>'; 
 				$built .= '/'.$dir;
 			}
