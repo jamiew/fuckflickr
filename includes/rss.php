@@ -1,6 +1,6 @@
 <?php
-// ouput a simple RSS2.0 feed 
-// just another way of rendering list.php, really
+// ouput a simple RSS2.0 feed
+// just another way of rendering list.php
 header("Content-Type: application/rss+xml");
 print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 ?>
@@ -13,17 +13,13 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 		<generator>FuckFlickr</generator>
 		<?php
 		foreach($this->ff_items as $image):
-			print "image = $image".FF_BR;
 			$dir = FF_DATA_DIR.preg_replace('/^\//', '', dirname(str_replace(FF_DATA_DIR, '', $image))).'/';
 			$file = basename($image);
-			print "dir = $dir ... file = $file".FF_BR;
-			// $shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
-			$title = $file;
 		?>
 		<item>
 			<guid><?php print $this->urlFor('original', $file, $dir); ?></guid>
 			<link><?php print $this->urlFor('original', $file, $dir); ?></link>
-			<title><?php print $title; ?></title>
+			<title><?php print $file; ?></title>
 			<pubDate><?php print time(); // FIME ?></pubDate>
 			<?php /*
 				<enclosure type="video/quicktime" url="http://www.rocketboom.com/video/rb_08_mar_28.mov" length="25512412" />
@@ -31,7 +27,7 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 			*/
 			?>
 			<description><![CDATA[
-				<a href="<?php print $this->urlFor('web', $file, $dir) ?>" title="<?php print $title ?>"><img src="<?php print $this->urlFor('thumb', $file, $dir) ?>" alt="<?php print $title ?>" border="0" /></a>
+				<a href="<?php print $this->urlFor('web', $file, $dir) ?>" title="<?php print $file ?>"><img src="<?php print $this->urlFor('thumb', $file, $dir) ?>" alt="<?php print $file ?>" border="0" /></a>
 				<p><?php print wordWrap($this->dir_info[$this->dir_name]['images'][$image]['desc'], 15) ?></p>]]>
 			</description>
 		</item>
