@@ -300,7 +300,7 @@ class fuckflickr extends imageResize {
 	// get contents of a directory
 	function readDir($dirname = '') {
 		if(empty($dirname)) $dirname = $this->dir;
-		$rdir = dir($dirname);
+		$rdir = @dir($dirname);
 		if ($rdir) {
 			if ($this->debug) echo 'reading directory '. $this->dir . FF_BR;
 
@@ -355,9 +355,8 @@ class fuckflickr extends imageResize {
 	// shortcut for generating navigation breadcrumbs / titles
 	function pageTitle() {
 		echo FF_NAME .' ' 
-		. FF_SEPARATOR 
-		. (($this->dir != FF_DATA_DIR) ? str_replace( array('data/', '/', '-', '_'), array('', '/', ' ', ' '), cleanDirname($this->dir)) : '')  /* was 'default dir name' */
-		. FF_SEPARATOR . FF_ANTI_FLICKR_MSG;
+		. (($this->dir != FF_DATA_DIR) ? FF_SEPARATOR.str_replace( array('data/', '/', '-', '_'), array('', '/', ' ', ' '), cleanDirname($this->dir)) : '')
+		. (defined(FF_ANTI_FLICKR_MESSAGE) ? FF_SEPARATOR.FF_ANTI_FLICKR_MESSAGE : '');
 	}
 	
 	// shortcut for pagination links inside the theme
