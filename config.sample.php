@@ -1,17 +1,17 @@
 <?
-##############################################################
-##		___              __     ___ __ __        __           ##
-##	.'  _|.--.--.----.|  |--.'  _|  |__|.----.|  |--.----.  ##
-##	|   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
-##	|__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
-##############################################################
+#############################################################
+##   ___              __     ___ __ __        __           ##
+## .'  _|.--.--.----.|  |--.'  _|  |__|.----.|  |--.----.  ##
+## |   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
+## |__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
+#############################################################
 
 // name your fflickr install
-$NAME = "Jamie Dubs' Photos";
+$NAME = "FuckFlickr Fotos!";
 
 // URL to your fuckflickr system, with trailing slash
 // (optional, should autodetect just fine)
-$LINK = "http://fffff.at/fuckflickr/";
+$LINK = "http://example.com/fuckflickr/";
 
 // this is how many images fuckflickr resizes on one refresh
 // 10 is a good amnt - you dont want to hammer your server
@@ -27,7 +27,7 @@ $CLEAN_URLS = true;
 $CC_LICENSE = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 License</a>';
 
 // your anti flickr message for the title & footer of each page
-$ANTI_FLICKR_MSG = "";
+$ANTI_FLICKR_MSG = "FUCK FLICKR!";
 
 // separator for title
 $SEPARATOR = ' &ndash; ';
@@ -50,7 +50,7 @@ $EXCLUDE_DIRS = "secret,top_secret";
 $IMAGE_QUALITY = 3;
 
 // number of photos per page
-$IMAGES_PER_PAGE = 30;
+$IMAGES_PER_PAGE = 25;
 
 // what's yr theme? (keep the trailing slash)
 $THEME = 'fuckflickr/';
