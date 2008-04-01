@@ -50,8 +50,7 @@ $EXCLUDE_DIRS = "secret,top_secret";
 $IMAGE_QUALITY = 3;
 
 // number of photos per page
-// $IMAGES_PER_PAGE = 10; // trunk ~r34, not currently working
-$IMAGES_PER_PAGE = 0;
+$IMAGES_PER_PAGE = 30;
 
 // what's yr theme? (keep the trailing slash)
 $THEME = 'fuckflickr/';

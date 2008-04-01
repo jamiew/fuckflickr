@@ -39,11 +39,10 @@ $begintime = $time;
 	<div id="header">
 
 		<!-- have it your way -->
-		<div id="settings">
+		<div id="settings"><form>
 			<?php $lightbox_enabled = (!empty($_COOKIE['fuckflickr_lightbox'])) ? $_COOKIE['fuckflickr_lightbox'] : FF_LIGHTBOX_DEFAULT; ?>
 			<label for="lightbox">use lightbox: </label><input type="checkbox" id="lightbox" name="lightbox" value="lightbox" <?php echo $lightbox_enabled ? 'checked="checked"' : '' ?> /><br />
 			<label for="ff_sort">sort by: </label><select id="ff_sort" name="sort" onchange="javascript: var ff_sort = this.options[this.selectedIndex].value; if (ff_sort != '' && ff_sort != '-1') location.href=ff_sort;">
-				<form>
 				<option value="<?php echo $this->urlFor('dir', '', $this->dir_name, '', 'sort') ?>"<?php if ($this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
 				<option value="<?php echo $this->urlFor('dir', '', $this->dir_name, 'sort=name', 'sort') ?>"<?php if ($this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
 			</select><noscript><input type="submit" value="Sort" /></noscript></form>
@@ -73,12 +72,15 @@ $begintime = $time;
 		if ($this->dir != FF_DATA_DIR)
 			$parent = str_replace(FF_DATA_DIR, '', $this->dir);
 			$built = '';
+
 			foreach(explode('/', str_replace(FF_DATA_DIR, '', $this->dir)) as $dir) {
 				if(empty($dir)) continue;
+				if (empty($this->dir_info[$dir])) $this->readDirInfo($dir, FF_DATA_DIR . $built . $dir .'/'); // fuckin' slash
 				$url = $this->urlFor( 'dir', $built.'/'.cleanDirname($dir) ); // third var behaving strangely
-				print ' / <a href="'.$url.'">'.$dir.'</a>'; 
+				print ' / <a href="'.$url.'">'. ((!empty($this->dir_info[$dir]['directory']['title'])) ? $this->dir_info[$dir]['directory']['title'] : $dir) .'</a>'; 
 				$built .= '/'.$dir;
 			}
+
 		?>
 	</div>
 
