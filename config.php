@@ -7,7 +7,7 @@
 ##############################################################
 
 // name your fflickr install
-$NAME = "F.A.T PHOTOS";
+$NAME = "Jamie Dubs' Photos";
 
 // URL to your fuckflickr system, with trailing slash
 // (optional, should autodetect just fine)
@@ -27,7 +27,7 @@ $CLEAN_URLS = true;
 $CC_LICENSE = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 License</a>';
 
 // your anti flickr message for the title & footer of each page
-$ANTI_FLICKR_MSG = "FUCK FLICKR";
+$ANTI_FLICKR_MSG = "";
 
 // separator for title
 $SEPARATOR = ' &ndash; ';
