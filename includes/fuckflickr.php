@@ -281,7 +281,7 @@ class fuckflickr extends imageResize {
 				return $this->findURL() .'/'.$dir.FF_DATA_THUMB_DIR.$what;
 				break;
 			case 'indexThumb';
-				return $this->dir_root.$dir.'/'.$what.'thumb/';
+				return $this->dir_root.$dir.'/'.str_replace(' ', '%20', $what).'thumb/';
 				break;
 			case 'anchor':
 				return $this->urlFor('dir', $this->dir) .'#'. $what;
