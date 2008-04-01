@@ -40,7 +40,7 @@ class fuckflickr extends imageResize {
 		$this->processImages(); // parse imgz
 		if ($this->dir != FF_DATA_DIR) $this->evalDirInfo($this->dir_name, $this->dir);
 		for ($i=0; $i<sizeof($this->ff_dirs); $i++) {
-		  echo 'aaa'. $this->ff_dirs[$i].'<br />'.$this->dir . $this->ff_dirs[$i] .'<br /><br />';
+		  if($this->debug) echo 'aaa'. $this->ff_dirs[$i].'<br />'.$this->dir . $this->ff_dirs[$i] .'<br /><br />';
 		  $this->readDirInfo($this->ff_dirs[$i], $this->dir . $this->ff_dirs[$i]);
 	  }
 		$this->openTemplate($file);
@@ -281,7 +281,7 @@ class fuckflickr extends imageResize {
 				return $this->findURL() .'/'.$dir.FF_DATA_THUMB_DIR.$what;
 				break;
 			case 'indexThumb';
-				return $this->dir_root .'data/'.$dir.$what.'thumb/';
+				return $this->dir_root.$dir.'/'.$what.'thumb/';
 				break;
 			case 'anchor':
 				return $this->urlFor('dir', $this->dir) .'#'. $what;
