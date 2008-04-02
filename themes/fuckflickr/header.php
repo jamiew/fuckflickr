@@ -72,13 +72,13 @@ $begintime = $time;
 		if ($this->dir != FF_DATA_DIR)
 			$parent = str_replace(FF_DATA_DIR, '', $this->dir);
 			$built = '';
-
 			foreach(explode('/', str_replace(FF_DATA_DIR, '', $this->dir)) as $dir) {
 				if(empty($dir)) continue;
-				if (empty($this->dir_info[$dir])) $this->readDirInfo($dir, FF_DATA_DIR . $built . $dir .'/'); // fuckin' slash
-				$url = $this->urlFor( 'dir', $built.'/'.cleanDirname($dir) ); // third var behaving strangely
-				print ' / <a href="'.$url.'">'. ((!empty($this->dir_info[$dir]['directory']['title'])) ? $this->dir_info[$dir]['directory']['title'] : $dir) .'</a>'; 
-				$built .= '/'.$dir;
+				$path = FF_DATA_DIR . $built . $dir .'/';
+				if (empty($this->dir_info[$path . $dir])) $this->readDirInfo($path, $path);
+				$url = $this->urlFor( 'dir', $built . cleanDirname($dir) ); // third var behaving strangely
+				echo ' / <a href="'.$url.'">'. ((!empty($this->dir_info[$path]['directory']['title'])) ? $this->dir_info[$path]['directory']['title'] : $dir) .'</a>'; 
+				$built .= $dir .'/';
 			}
 
 		?>

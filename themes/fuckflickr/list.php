@@ -23,10 +23,10 @@ if (!empty($this->ff_items) || !empty($this->ff_dirs)):
 <?php if(!empty($this->ff_dirs)): ?>
 <div id="directories">
 	<?php for ($i=0; $i<sizeof($this->ff_dirs); $i++): ?>	
-<?php	//echo $this->ff_dirs[$i] .'<pre>'.  print_r($this->dir_info, true) .'</pre>' ?>
+<?php $path = $this->dir . $this->ff_dirs[$i]; ?>
 	<div class="preview">
 		<a href="<?php echo $this->urlFor('dir', $this->dir . $this->ff_dirs[$i]) ?>" style="background-image: url(<?php echo $this->urlFor('indexThumb', $this->dir . $this->ff_dirs[$i], $this->dir_name) . FF_INDEX_THUMB_NAME ?>);">
-			<span><?php echo ((!empty($this->dir_info[$this->ff_dirs[$i]]['directory']['title'])) ? $this->dir_info[$this->ff_dirs[$i]]['directory']['title'] : str_replace(array('/', '_', '-'), array('', ' ', ' '), $this->ff_dirs[$i])) ?></span>
+			<span><?php echo ((!empty($this->dir_info[$path]['directory']['title'])) ? $this->dir_info[$path]['directory']['title'] : str_replace(array('/', '_', '-'), array('', ' ', ' '), $this->ff_dirs[$i])) ?></span>
 		</a>
 	</div>
 	<?php endfor; ?>
