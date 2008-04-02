@@ -473,7 +473,13 @@ class fuckflickr extends imageResize {
 	* YAML "database"
 	*/
 	function makeYAML($name='', $dir='', $info=false) {
-		$content = 'directory:'. FF_NL . FF_SPACES .'title:'. ((isset($info['directory']['title'])) ? $info['directory']['title'] : $name) . FF_NL . FF_SPACES .'desc:'. $info['directory']['desc'] . FF_NL .'images:'. FF_NL;
+	  $dirs = explode('/', $name);
+    $title = false;
+    while (empty($title)) {
+      if (sizeof($dirs) < 1) break;
+      $title = array_pop($dirs);
+    }
+		$content = 'directory:'. FF_NL . FF_SPACES .'title:'. ((isset($info['directory']['title'])) ? $info['directory']['title'] : (($title) ? $title : $name)) . FF_NL . FF_SPACES .'desc:'. $info['directory']['desc'] . FF_NL .'images:'. FF_NL;
 
 		// go through each image
 		foreach ($this->ff_items as $v) 
