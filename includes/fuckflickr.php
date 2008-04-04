@@ -389,7 +389,8 @@ class fuckflickr extends imageResize {
 				$args .= ((FF_CLEAN_URLS) ? $k .'/'. $v .'/' : ((!empty($args)) ? '&' : '?') . $k .'='. $v);
 			}
 		}
-		return $args;
+
+		return ((!empty($args)) ? '/'. $args : '');
 	}
 
 	function pagesLinks($num=0, $what) {
