@@ -269,7 +269,7 @@ class fuckflickr extends imageResize {
 				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . cleanDirname($what) . (($excl) ? $this->makeReqLinks($excl, ((!empty($etc)) ? $etc : '')) : '') : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? $etc : ''));
 				break;
 			case 'page':
-				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks('page', ((!empty($etc)) ? $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? $etc : ''));
+				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . cleanDirname($what) . $this->makeReqLinks('page', ((!empty($etc)) ? $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? $etc : ''));
 				break;
 			case 'original':
 				return $this->findURL() .'/'.$dir.$what;
