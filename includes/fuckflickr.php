@@ -192,10 +192,10 @@ class fuckflickr extends imageResize {
 				mkdir($this->dir_web, 0777);
 			}
 	
-			$count = 0;
+			$this->resize_count = 0;
 			// lets make thumbnails
 			foreach($this->ff_items as $item) {
-				if ($count >= FF_PROCESS_NUM) break; // Don't blow a gasket
+				if ($this->resize_count >= FF_PROCESS_NUM) break; // Don't blow a gasket
 				if (!file_exists($this->dir_web . $item) || !file_exists($this->dir_thumbs . $item) ) {
 
 					// if failed the first time (web), it should fail the second time (thumb). [halvfet]
@@ -223,7 +223,7 @@ class fuckflickr extends imageResize {
 					} elseif ($this->debug) {
 						echo '<strong>FAILED</strong> making web image for '. $item . FF_BR;
 					}
-					$count++;
+					$this->resize_count++;
 				}
 			}
 		}		
@@ -306,7 +306,6 @@ class fuckflickr extends imageResize {
 
 			while ($rfile = $rdir->read()) {
 				if (in_array($rfile, $this->exclude) || substr($rfile, -5) == 'thumb' || substr($rfile, -3) == 'web') continue; // FUCK THAT DIR
-
 				if(is_dir($this->dir . $rfile) ) {
 					$this->ff_dirs[] = array($rfile, filemtime($this->dir . $rfile));
 					$sortDir = true;
@@ -536,83 +535,6 @@ class fuckflickr extends imageResize {
 		return $r;
 	}
 }
-
-/*
-* image resizing object, parent to our flickr fucker
-*/
-class imageResize {
-	function resizeImage($file, $dest, $newWidth, $newHeight, $quality, $bResizeOnWidth){
-		if (!file_exists($file)) {
-			if ($this->debug) echo 'source does not exist!'. FF_BR;
-			return false;
-		}
-
-		$w = 0;
-		$h = 0;
-		$src = false;
-
-		// Create an Image from it so we can do the resize
-		list($width, $height, $type) = getimagesize($file);
-
-    // Do not resample up the image size
-		if ($width <= $newWidth && $height <= $newHeight) {
-		  copy($file, $dest);
-		  return (is_file($dest));
-		}
-
-		switch ($type) {
-			case '2': $src = @imagecreatefromjpeg($file); break;
-			case '3': $src = imagecreatefrompng($file); break;
-			case '1': $src = imagecreatefromgif($file); break;
-		}
-
-		if (!$src) {
-	      if ($this->debug) echo 'problem opening '. $file .' - check it is complete'. FF_BR;
-			return false;
-		}
-
-		if ($bResizeOnWidth == 1 || ($width > $height)){
-			$w = $newWidth;
-			$ratio = $height/$width;
-			$h = $ratio * $w;
-		} else {
-			$h = $newHeight;
-			$ratio = $width/$height;
-			$w = $ratio * $h;
-		}
-
-		if ($tmp = imagecreatetruecolor($w,$h)) {
-			// FROM Author: Tim Eckel - Date: 09/07/07 - Version: 1.1 - Project: FreeRingers.net - Freely distributable
-			if (FF_IMG_QUALITY < 5 && (($w * FF_IMG_QUALITY) < $width || ($h * FF_IMG_QUALITY) < $height)) {
-				if ($tmp2 = imagecreatetruecolor (($w * FF_IMG_QUALITY + 1), ($h * FF_IMG_QUALITY + 1))) {
-					imagecopyresized ($tmp2, $src, 0, 0, 0, 0, ($w * FF_IMG_QUALITY + 1), ($h * FF_IMG_QUALITY + 1), $width, $height);
-					imagecopyresampled ($tmp, $tmp2, 0, 0, 0, 0, $w, $h, ($w * FF_IMG_QUALITY), ($h * FF_IMG_QUALITY));
-					imagedestroy ($tmp2);
-				} elseif ($this->debug) {
-					echo 'could not create temp image for faster resize'. FF_BR;
-					return false;
-				}
-			} else {
-				imagecopyresampled ($tmp, $src, 0, 0, 0, 0, $w, $h, $width, $height);
-			}
-
-			switch ($type) {
-				case '2': @imagejpeg($tmp, $dest, $quality); break;
-				case '3': imagepng($tmp, $dest, (9-round($quality/9))); break; // quality is 0-9, with 0 being the best. convert from jpeg 100 scale.
-				case '1': imagegif($tmp, $dest); break; // gif has no quality
-			}
-			imagedestroy($src);
-			imagedestroy($tmp);
-
-			return (is_file($dest)); // return true if file was created successfully
-		} elseif ($this->debug) {
-			echo 'could not create temp image for resize'. FF_BR;
-		}
-
-		return false;
-	}
-}
-
 
 /*
 * misc helper functions
