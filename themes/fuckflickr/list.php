@@ -14,11 +14,11 @@ if (!empty($this->ff_items) || !empty($this->ff_dirs)):
 	}
 ?>
 
-<div id="description">
-	<?php echo ((!empty($this->dir_info[$this->dir_name]['directory']['desc'])) ? $this->dir_info[$this->dir_name]['directory']['desc'] : str_replace(array('/', '_', '-'), array('', ' ', ' '), '')) ?>
-</div>
 
-<div class="pagination"><?php print $this->pagination() ?></div>
+<?php echo ((!empty($this->dir_info[$this->dir_name]['directory']['title'])) ? '<h1 id="title">'. $this->dir_info[$this->dir_name]['directory']['title'] .'</h1>' : $this->dirname) ?>
+<?php echo ((!empty($this->dir_info[$this->dir_name]['directory']['desc'])) ? '<h3 id="description">'. $this->dir_info[$this->dir_name]['directory']['desc'] .'</h3>' : '') ?>
+
+
 
 <?php if(!empty($this->ff_dirs)): ?>
 <div id="directories">
@@ -33,6 +33,7 @@ if (!empty($this->ff_items) || !empty($this->ff_dirs)):
 </div> <!-- /#directories -->
 <?php endif; ?>
 
+<div class="pagination"><?php print $this->pagination() ?></div>
 
 <div id="images">
 <?php

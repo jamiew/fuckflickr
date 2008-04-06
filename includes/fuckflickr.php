@@ -362,9 +362,11 @@ class fuckflickr extends imageResize {
 	// can rewrite for your own theme
 	function pagination() {
 		$out = '';
+		$ct_start = ($this->cur_page-1)*FF_PER_PAGE;
+		$ct_end = (($ct_start + FF_PER_PAGE) > sizeof($this->ff_items)) ? sizeof($this->ff_items) : ($ct_start + FF_PER_PAGE);
 		if (sizeof($this->ff_items) > 0) {// || sizeof($this->ff_dirs) > 0) { // will eventually list # of nested dirs
 		  if (FF_PER_PAGE > 0 && sizeof($this->ff_items) > 0) $out .= '<p><strong>Page</strong>'.$this->pagesLinks(sizeof($this->ff_items), $this->dir, $this->dir_name).' &ndash; '.FF_NL;
-		  $out .= 'Viewing '. ((sizeof($this->ff_dirs) > 0) ? (($use_pages) ? ($ct_start+1) .'&ndash;'. $ct_end .' of' : 'all').' '.sizeof($this->ff_items).' items' : '') .FF_NL;
+		  $out .= 'Viewing '. ((sizeof($this->ff_items) > 0) ? ((FF_PER_PAGE > 0 && $this->cur_page != 'all') ? ($ct_start+1) .'&ndash;'. $ct_end .' of' : 'all').' '.sizeof($this->ff_items).' image'. ((sizeof($this->ff_items) != 1) ? 's' : '') : ' nothing') .FF_NL;
 		}
 		return $out;
 	}

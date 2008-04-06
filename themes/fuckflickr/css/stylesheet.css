@@ -91,6 +91,7 @@ p, h1, h2, h3, h4, h5 {
   font-size: 13pt;
   background-color: #ffffaa;
   padding: 10px 0 10px 20px;
+  margin: 0 0 15px 0;
 }
 
 .rss {
@@ -99,9 +100,7 @@ p, h1, h2, h3, h4, h5 {
   margin-top: -2px;
 }
 
-.pagination {
-  clear: both;
-}
+.pagination {clear: both; margin: 15px 0 5px 0; padding: 0;}
 
 
 #footer {
@@ -116,7 +115,7 @@ p, h1, h2, h3, h4, h5 {
 /******* gallery display ******/
 
 #directories {
- margin-top: 10px;
+ margin: 10px 0 20px 0;
  padding: 5px 10px;
  min-height: 25px;
 }
@@ -196,5 +195,9 @@ p, h1, h2, h3, h4, h5 {
 .embed { margin-left: 8px; }
 
 
+h1#title {margin: 5px 0 3px 0; padding: 0; font-size: 24px; line-height: 27px;}
+h3#description {font-size: 13px; margin: 5px 0 3px 0; padding: 0; line-height: 15px; font-weight: normal;}
 
+
+#directories:after, #images:after {content: "."; clear: both; display: block; visibility: hidden; font-size: 0; line-height: 0; height: 0;}
 
