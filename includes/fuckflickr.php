@@ -24,6 +24,7 @@ class fuckflickr extends imageResize {
 		$this->dir_tmpl = $this->dir_root . FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
 		$this->sortDir = true;
 		$this->ff_total = 0;
+		$this->dir_date = 0;
 		$this->timenow = time();
 
 		// kick off this mother
@@ -80,7 +81,7 @@ class fuckflickr extends imageResize {
 
 		$this->dir_name = $this->makeDirName($this->dir);
 		$this->dir_origs = $this->dir;
-		$this->dir_thumbs = $this->dir.FF_DATA_THUMB_DIR; 
+		$this->dir_thumbs = $this->dir.FF_DATA_THUMB_DIR;
 		$this->dir_web = $this->dir.FF_DATA_WEB_DIR;
 		
 		$this->cur_page = ((is_numeric($this->reqs['page']) && $this->reqs['page'] > 0 || $this->reqs['page'] == 'all') ? floor($this->reqs['page']) : 1);
@@ -169,6 +170,48 @@ class fuckflickr extends imageResize {
 	}
 
 
+	// get contents of a directory
+	function readDir($dirname = '') {
+		if (empty($dirname)) $dirname = $this->dir;
+		$rdir = @dir($dirname);
+		if ($rdir) {
+			if ($this->debug) echo 'reading directory '. $this->dir . FF_BR;
+
+			while ($rfile = $rdir->read()) {
+				if (in_array($rfile, $this->exclude) || substr($rfile, -5) == 'thumb' || substr($rfile, -3) == 'web') continue; // FUCK THAT DIR
+				if(is_dir($this->dir . $rfile) ) {
+					$this->ff_childs[] = array($rfile, filemtime($this->dir . $rfile));
+					$sortDir = true;
+				}
+
+				if (in_array(getFileExtension(strtolower($rfile)), array('jpg', 'jpeg', 'jpe', 'png', 'gif'))) {
+					// Grab as array to sort either by name or date 
+					$date = filemtime($this->dir . $rfile);
+					$this->ff_files[] = array($rfile, $date);
+					if ($date > $this->dir_date) $this->dir_date = $date;
+					$sortMe = true;
+					$this->ff_vals[] = 1;
+					$this->ff_total++;
+				}
+			}
+			$rdir->close();
+		} elseif ($this->debug) {
+			echo 'could not read directory '. $this->dir;
+		}
+
+		// Do sorting (if enabled)
+		if ($this->sortDir) {
+			if (sizeof($this->ff_childs) > 0) $this->sortDir();
+			if (sizeof($this->ff_files) > 0) $this->sortItems();
+		}
+
+		// Compound into names
+		$ds = sizeof($this->ff_childs);
+		for($i = 0; $i < $ds; $i++) $this->ff_dirs[$i] = $this->ff_childs[$i][0] .'/';
+		$is = sizeof($this->ff_files);
+		for($i = 0; $i < $is; $i++) $this->ff_items[$i] = $this->ff_files[$i][0];
+	}
+
 	/*
 	*	resize all unresized images
 	*/	
@@ -201,22 +244,10 @@ class fuckflickr extends imageResize {
 					// if failed the first time (web), it should fail the second time (thumb). [halvfet]
 					if($this->debug) echo 'making web image for '. $item . FF_BR;
 					if ($this->resizeImage($this->dir . $item, $this->dir_web . $item, 600, 450, 93, 1)) {
-
 						// make a thumbnail
 						if ($this->debug) echo 'making thumbnail for '. $item. FF_BR;
 						if ($this->resizeImage($this->dir_web . $item, $this->dir_thumbs . $item, 300, 225, 93, 0)) {
-
-							// make our index page thumbnail
-							if ($count == FF_PROCESS_NUM || $count == sizeof($this->ff_items)-1){
-								if ($this->debug) echo 'making index thumbnail for '. $this->dir . FF_BR;
-								if ($this->resizeImage($this->dir_web . $item, $this->dir_thumbs . FF_INDEX_THUMB_NAME, 120, 90, 93, 0)) {
-									$pf = dirname(dirname(dirname($this->dir_thumbs . FF_INDEX_THUMB_NAME)));
-									if (file_exists($this->dir_thumbs . FF_INDEX_THUMB_NAME) && $pf != 'data' && !file_exists($pf .'/thumb/')) mkdir($pf .'/thumb/');
-									@copy($this->dir_thumbs . FF_INDEX_THUMB_NAME, $pf .'/thumb/'. FF_INDEX_THUMB_NAME);
-								} elseif ($this->debug) {
-									echo '<strong>FAILED</strong> making index thumbnail image for '. $this->dir . FF_BR;
-								}
-							}
+              // moved thumbnail gen script outside of loop to ensure it is generated
 						} elseif ($this->debug) {
 							echo '<strong>FAILED</strong> making thumb image for '. $item . FF_BR;
 						}
@@ -224,6 +255,24 @@ class fuckflickr extends imageResize {
 						echo '<strong>FAILED</strong> making web image for '. $item . FF_BR;
 					}
 					$this->resize_count++;
+				}
+			}
+
+			// make our index page thumbnail
+			// if thumbnail does not exist or directory has been modified since last generation, make it
+			if (sizeof($this->ff_items) > 0 && (!is_file($this->dir_thumbs . FF_INDEX_THUMB_NAME) || $this->dir_date > filemtime($this->dir_thumbs . FF_INDEX_THUMB_NAME))) {
+		    if ($this->debug) echo 'making index thumbnail for '. $this->dir . FF_BR;
+				$items = $this->ff_files;
+				usort($items, array($this, 'dateSort'));
+				$item = array_shift($items);
+				unset($items);
+				if ($this->resizeImage($this->dir_web . $item[0], $this->dir_thumbs . FF_INDEX_THUMB_NAME, 120, 90, 93, 0)) {
+				  // DO WE REALLY NEED THIS?
+					//$pf = dirname(dirname(dirname($this->dir_thumbs . FF_INDEX_THUMB_NAME)));
+					//if (file_exists($this->dir_thumbs . FF_INDEX_THUMB_NAME) && $pf != 'data' && !file_exists($pf .'/thumb/')) mkdir($pf .'/thumb/');
+					//@copy($this->dir_thumbs . FF_INDEX_THUMB_NAME, $pf .'/thumb/'. FF_INDEX_THUMB_NAME);
+				} elseif ($this->debug) {
+					echo '<strong>FAILED</strong> making index thumbnail image for '. $this->dir . FF_BR;
 				}
 			}
 		}		
@@ -265,7 +314,7 @@ class fuckflickr extends imageResize {
 		
 		switch ($type) {
 			case 'dir':
-				if($this->debug) print "urlFor(dir): $what, $dir, $etc, $excl".FF_BR;
+				//if($this->debug) print "urlFor(dir): $what, $dir, $etc, $excl".FF_BR;
 				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . cleanDirname($what) . (($excl) ? $this->makeReqLinks($excl, ((!empty($etc)) ? $etc : '')) : '') : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? $etc : ''));
 				break;
 			case 'page':
@@ -281,7 +330,7 @@ class fuckflickr extends imageResize {
 				return $this->findURL() .'/'.$dir.FF_DATA_THUMB_DIR.$what;
 				break;
 			case 'indexThumb';
-				return $this->dir_root.$dir.'/'.str_replace(' ', '%20', $what).'thumb/';
+				return $this->dir_root . FF_DATA_DIR . $dir . str_replace(' ', '%20', $what) . FF_DATA_THUMB_DIR;
 				break;
 			case 'anchor':
 				return $this->urlFor('dir', $this->dir) .'#'. $what;
@@ -296,55 +345,14 @@ class fuckflickr extends imageResize {
 	}	
 
 
-
-	// get contents of a directory
-	function readDir($dirname = '') {
-		if(empty($dirname)) $dirname = $this->dir;
-		$rdir = @dir($dirname);
-		if ($rdir) {
-			if ($this->debug) echo 'reading directory '. $this->dir . FF_BR;
-
-			while ($rfile = $rdir->read()) {
-				if (in_array($rfile, $this->exclude) || substr($rfile, -5) == 'thumb' || substr($rfile, -3) == 'web') continue; // FUCK THAT DIR
-				if(is_dir($this->dir . $rfile) ) {
-					$this->ff_dirs[] = array($rfile, filemtime($this->dir . $rfile));
-					$sortDir = true;
-				}
-
-				if (in_array(getFileExtension(strtolower($rfile)), array('jpg', 'jpeg', 'jpe', 'png', 'gif'))) {
-					// Grab as array to sort either by name or date 
-					$this->ff_items[] = array($rfile, filemtime($this->dir . $rfile));
-					$sortMe = true;
-					$this->ff_vals[] = 1;
-					$this->ff_total++;
-				}
-			}
-			$rdir->close();
-		} elseif ($this->debug) {
-			echo 'could not read directory '. $this->dir;
-		}
-
-		// Do sorting (if enabled)
-		if ($this->sortDir) {
-			if (sizeof($this->ff_dirs) > 0) $this->sortDir();
-			if (sizeof($this->ff_items) > 0) $this->sortItems();
-		}
-
-		// Compound into names
-		$ds = sizeof($this->ff_dirs);
-		for($i = 0; $i < $ds; $i++) $this->ff_dirs[$i] = $this->ff_dirs[$i][0] .'/';
-		$is = sizeof($this->ff_items);
-		for($i = 0; $i < $is; $i++) $this->ff_items[$i] = $this->ff_items[$i][0];
-	}
-
 	// dynamically pick up where the application is installed
 	function findURL() {
 		return (($_SERVER["HTTPS"] == 'on') ? 'https' : 'http') .'://'. $_SERVER["SERVER_NAME"] . (($_SERVER["SERVER_PORT"] != '80') ? $_SERVER["SERVER_PORT"] : '') . dirname($_SERVER['PHP_SELF']);
 	}
 
 	// list sorting
-	function sortDir() {usort($this->ff_dirs, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
-	function sortItems() {usort($this->ff_items, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
+	function sortDir() {usort($this->ff_childs, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
+	function sortItems() {usort($this->ff_files, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
 
 	// comparison functions
 	function dateSort($a, $b) {return ($a[1] > $b[1]) ? -1 : 1;}
@@ -575,5 +583,7 @@ if (!function_exists('wordwrap')) {
 		return $r;
 	}
 }
+
+function pre_a($a) {echo '<pre>'. ((is_array($a) || is_object($a)) ? print_r($a, true) : $a) .'</pre>';}
 
 ?>
