@@ -311,14 +311,13 @@ class fuckflickr extends imageResize {
 		// currently for images only, throwing other ish off
 		if(empty($dir) && ($type == 'original' || $type == 'web' || $type == 'thumb')) $dir = $this->dir;
 		$what = str_replace(FF_DATA_DIR, '', $what);
-		
 		switch ($type) {
 			case 'dir':
 				//if($this->debug) print "urlFor(dir): $what, $dir, $etc, $excl".FF_BR;
-				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . cleanDirname($what) . (($excl) ? $this->makeReqLinks($excl, ((!empty($etc)) ? $etc : '')) : '') : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? $etc : ''));
+				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . (($excl) ? $this->makeReqLinks($excl, ((!empty($etc)) ? $etc : '')) : '') : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? $etc : ''));
 				break;
 			case 'page':
-				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . cleanDirname($what) . $this->makeReqLinks('page', ((!empty($etc)) ? $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? $etc : ''));
+				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks('page', ((!empty($etc)) ? $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? $etc : ''));
 				break;
 			case 'original':
 				return $this->findURL() .'/'.$dir.$what;
@@ -373,7 +372,7 @@ class fuckflickr extends imageResize {
 		$ct_start = ($this->cur_page-1)*FF_PER_PAGE;
 		$ct_end = (($ct_start + FF_PER_PAGE) > sizeof($this->ff_items)) ? sizeof($this->ff_items) : ($ct_start + FF_PER_PAGE);
 		if (sizeof($this->ff_items) > 0) {// || sizeof($this->ff_dirs) > 0) { // will eventually list # of nested dirs
-		  if (FF_PER_PAGE > 0 && sizeof($this->ff_items) > 0) $out .= '<p><strong>Page</strong>'.$this->pagesLinks(sizeof($this->ff_items), $this->dir, $this->dir_name).' &ndash; '.FF_NL;
+		  if (FF_PER_PAGE > 0 && sizeof($this->ff_items) > 0) $out .= '<p><strong>Page</strong>'.$this->pagesLinks(sizeof($this->ff_items), $this->dir).' &ndash; '.FF_NL;
 		  $out .= 'Viewing '. ((sizeof($this->ff_items) > 0) ? ((FF_PER_PAGE > 0 && $this->cur_page != 'all') ? ($ct_start+1) .'&ndash;'. $ct_end .' of' : 'all').' '.sizeof($this->ff_items).' image'. ((sizeof($this->ff_items) != 1) ? 's' : '') : ' nothing') .FF_NL;
 		}
 		return $out;
@@ -399,7 +398,7 @@ class fuckflickr extends imageResize {
 			}
 		}
 
-		return ((!empty($args)) ? '/'. $args : '');
+		return ((!empty($args)) ? $args : '');
 	}
 
 	function pagesLinks($num=0, $what) {

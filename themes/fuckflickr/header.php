@@ -34,7 +34,6 @@ $begintime = $time;
 
 </head>
 <body>
-
 <div id="container">
 	<div id="header">
 
@@ -43,14 +42,14 @@ $begintime = $time;
 			<?php $lightbox_enabled = (!empty($_COOKIE['fuckflickr_lightbox'])) ? $_COOKIE['fuckflickr_lightbox'] : FF_LIGHTBOX_DEFAULT; ?>
 			<label for="lightbox">use lightbox: </label><input type="checkbox" id="lightbox" name="lightbox" value="lightbox" <?php echo $lightbox_enabled ? 'checked="checked"' : '' ?> /><br />
 			<label for="ff_sort">sort by: </label><select id="ff_sort" name="sort" onchange="javascript: var ff_sort = this.options[this.selectedIndex].value; if (ff_sort != '' && ff_sort != '-1') location.href=ff_sort;">
-				<option value="<?php echo $this->urlFor('dir', '', $this->dir_name, '', 'sort') ?>"<?php if ($this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
-				<option value="<?php echo $this->urlFor('dir', '', $this->dir_name, 'sort=name', 'sort') ?>"<?php if ($this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
+				<option value="<?php echo $this->urlFor('dir', $this->dir, '', '', 'sort') ?>"<?php if ($this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
+				<option value="<?php echo $this->urlFor('dir', $this->dir, '', 'sort=name', 'sort') ?>"<?php if ($this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
 			</select><noscript><input type="submit" value="Sort" /></noscript></form>
 		</div> <!-- /#settings -->
 		
 		<!-- humping graphic -->
 		<div id="logo">
-			<a href="<?php echo $this->dir_root ?>"><img src="<?php echo $this->dir_tmpl ?>/images/logos/fflickr_logo_PG_150px.gif" border="0" style="background-color: #FFFFFF;" /></a>
+			<a href="<?php echo $this->dir_root ?>"><img src="<?php echo $this->dir_tmpl ?>images/logos/fflickr_logo_PG_150px.gif" border="0" style="background-color: #FFFFFF;" /></a>
 		</div>
 	
 		<!-- anti-yahoo propaganda; TODO make configurable -->
@@ -63,7 +62,7 @@ $begintime = $time;
 
 	<div id="navigation">
 		<!-- rss -->
-		<a href="<?php print $this->urlFor('rss', $this->dir); ?>" title="RSS feed of new adds" class="rss"><img src="<?php echo $this->dir_tmpl ?>/images/feed-icon32x32.png" border="0" /></a>		
+		<a href="<?php print $this->urlFor('rss', $this->dir); ?>" title="RSS feed of new adds" class="rss"><img src="<?php echo $this->dir_tmpl ?>images/feed-icon32x32.png" border="0" /></a>		
 		
 		<!-- regular title -->
 		<a href="<?php echo $this->dir_root ?>"><?php echo FF_NAME ?></a>

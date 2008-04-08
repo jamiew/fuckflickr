@@ -62,11 +62,13 @@ p, h1, h2, h3, h4, h5 {
 }
 
 #header #logo a {
-  border: 1px solid transparent;
+  border-bottom: 2px solid transparent; display: block;
+  margin: 2px 0 5px 0;
 }
 #header #logo a:hover {
-  border: 1px solid #f0f;
+  border-bottom: 2px solid #ff0085;
 }
+#header #logo a img {background-color: #FFFFFF;}
 #header #logo, /* humping graphic */
 #header #fuckflickr-info { /* "why we should boycott..." */
   float: left;

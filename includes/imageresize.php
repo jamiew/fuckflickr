@@ -114,6 +114,7 @@ class imageResize {
 	}
 }
 
+// GIFDecoder Version 2.0 by László Zsidi, http://gifs.hu 
 Class GIFDecoder {
   var $GIF_buffer = Array(); var $GIF_arrays = Array(); var $GIF_delays = Array(); var $GIF_stream = ''; var $GIF_string = ''; var $GIF_bfseek =  0; var $GIF_screen = Array(); var $GIF_global = Array(); var $GIF_sorted; var $GIF_colorS; var $GIF_colorC; var $GIF_colorF;
 
@@ -218,6 +219,7 @@ Class GIFDecoder {
   function GIFGetDelays ( ) {return ( $this->GIF_delays );}
 }
 
+// GIFEncoder Version 2.0 by László Zsidi, http://gifs.hu
 Class GIFEncoder {
   var $GIF = "GIF89a"; var $VER = "GIFEncoder V2.05";
   var $BUF = Array (); var $LOP =  0; var $DIS =  2; var $COL = -1; var $IMG = -1;
