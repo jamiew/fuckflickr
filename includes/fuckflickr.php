@@ -1,10 +1,13 @@
 <?php
 ##############################################################
-##		___              __     ___ __ __        __           ##
-##	.'  _|.--.--.----.|  |--.'  _|  |__|.----.|  |--.----.  ##
-##	|   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
-##	|__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
+##    ___              __     ___ __ __        __           ##
+##  .'  _|.--.--.----.|  |--.'  _|  |__|.----.|  |--.----.  ##
+##  |   _||  |  |  __||    <|   _|  |  ||  __||    <|   _|  ##
+##  |__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
 ##############################################################
+
+// main beast
+// handles all requests
 
 class fuckflickr extends imageResize {
 	var $reqs = array();
@@ -52,21 +55,40 @@ class fuckflickr extends imageResize {
 		// eventually allow a photo page, with title, descripton, comments, toytags, etc.
 		$this->openTemplate($file);
 	}
-	
-	function viewRSS() {
-		// grab all images in our install
-		// skipping over the YAML stuff for now
-		
-		// FIXME TODO halvfet's readDir and sorting functions aren't
-		// multi-level image friendly, so i introduced
-		// some new ish. this should definitely be remedied
 
-		$this->ff_items = $this->findFiles($this->dir);
-		usort($this->ff_items, create_function('$a, $b', 'return @filemtime($a) > @filemtime($b);'));
-		$this->ff_items = array_splice($this->ff_items, $ct_start, FF_RSS_ITEM_COUNT);
+	// find all media in our install and render as an XML feed
+	function viewRSS() {
+	  		
+    // build our own grep exclusion list; $this->exclude is too tight
+    $patterns = array();
+    foreach($this->exclude as $f)
+      if( empty($f) || $f == '.' || $f == '..' || $f == $this->dir ) continue; // some stuff doesn't fly w/ `find`
+      else $patterns[] = $f;
+    $pattern = join('\|', $patterns);
+    $files = explode("\n", shell_exec("find $this->dir -type f | grep -v -e '$pattern'")); // system call; less than ideal
+    
+    // build file modified hash and sort
+    $sort = array();
+    foreach ($files as $path) { //configure path
+      $sort[$path] = filemtime($path);
+    } asort($sort); // sort by value, preserving keys
+    
+    // limit & render
+		$this->ff_items = array_splice( array_keys($sort), 0, FF_RSS_ITEM_COUNT );
 		include('rss.php');
 	}
-
+	
+  function globr($sDir, $sPattern, $nFlags = NULL)
+  {
+    $sDir = escapeshellcmd($sDir);
+    $aFiles = glob("$sDir/$sPattern", $nFlags);
+    foreach (glob("$sDir/*", GLOB_ONLYDIR) as $sSubDir) {
+      $aSubFiles = rglob($sSubDir, $sPattern, $nFlags);
+      $aFiles = array_merge($aFiles, $aSubFiles);
+    }
+    return $aFiles;
+  }
+  
 
 	/*
 	*	parse the request URI and/or POST/GET vars
@@ -449,34 +471,6 @@ class fuckflickr extends imageResize {
 		}
 	}
 	
-	/*
-	* find all files in our install; do not load YAML
-	* used primarily by RSS
-	* TODO could be merged around w/ other ish
-	*/ 
-	function findFiles($start_dir = '.', $recursive = true) {
-		if($start_dir == '.') $start_dir = $this->dir_root;
-	  $files = array();
-	  if (is_dir($start_dir)) {
-	    $fh = opendir($start_dir);
-	    while (($file = readdir($fh)) !== false) {
-	      // loop through files, exclude stuff we don't want
-	      if ( in_array($file, $this->exclude) ) continue;
-	      $filepath = $start_dir . '/' . $file;
-	      if ( is_dir($filepath) && $recursive)
-	        $files = array_merge($files, $this->findFiles($filepath));
-	      else
-	        array_push($files, $filepath);
-	    }
-	    closedir($fh);
-	  } else {
-	    // function was called with an invalid non-directory argument
-	    $files = false;
-	  }
-		
-	  return $files;
-	}
-
 	
 	/*
 	* YAML "database"
@@ -544,6 +538,7 @@ class fuckflickr extends imageResize {
 		return $r;
 	}
 }
+
 
 /*
 * misc helper functions
