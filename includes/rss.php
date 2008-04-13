@@ -2,6 +2,8 @@
 // ouput a simple RSS2.0 feed
 // just another way of rendering list.php
 header("Content-Type: application/rss+xml");
+header("Cache-Control: no-cache, must-revalidate"); // keep smart, mo'fo
+header("Expires: Thu, 25 Oct 2007 11:00:00 GMT"); // remember the F.A.T. Incorporation Date =)
 print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 ?>
 <rss version="2.0">
