@@ -51,7 +51,7 @@ foreach($images as $image):
 			<a target="_blank" rel="lightbox" title="<?php echo $shortName ?>" href="<?php echo $this->urlFor('web', $image) ?>"><img src="<?php echo $this->urlFor('thumb', $image) ?>" alt="<?php echo $shortName ?>" title="<?php echo $shortName ?>" border="0" /></a>
 		</div>
 		<div class="info">
-		 <span class="description"><?php echo wordWrap($this->dir_info[$this->dir_name]['images'][$image]['desc'], 15) ?></span>
+		 <p class="description"><?php echo $this->dir_info[$this->dir_name]['images'][$image]['desc'] ?></p>
 		 <p class="meta"><a class="short-name" href="#<?php echo $shortName ?>">#</a> 
 			<a class="hi-res" href="<?php echo $this->urlFor('original', $image) ?>">Hi-Res Image</a>
 		 	<span class="embed">embed <input class="embed-code" type="text" size="24" value="<?php echo htmlentities('<a href="'. $this->urlFor('anchor', $shortName) .'"><img src="'. $this->urlFor('web', $image).'" alt="'.$shortName.'" title="'.$shortName.'" border="0" /></a>') ?>" /></span><br />

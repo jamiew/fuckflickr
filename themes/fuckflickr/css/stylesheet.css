@@ -165,10 +165,11 @@ p, h1, h2, h3, h4, h5 {
   float: left;
   position: relative; 
   top: 0px; 
-  left: 0px; 
+  left: 0px;
+  display: block;
   border: 5px solid transparent; /* pimped out on hover */
   width: 110px;  /* 120px - 2*border */
-  min-height: 70px; /* 80px - 2*border */
+  height: 70px; /* 80px - 2*border */
   background-position: -5px -5px;
   overflow: hidden;
   text-align: center; 
@@ -192,6 +193,9 @@ p, h1, h2, h3, h4, h5 {
   background-color:white;
   font-size: 9px; /* non-gecko rendering engines actually go down to 1px; don't use that */ 
 }
+
+.description {padding: 8px 0 0 0;}
+.meta {padding: 8px 0 30px 0;}
 
 .hi-res { margin-left: 5px; } /* give the man some elbow room geeze */
 .embed { margin-left: 8px; }

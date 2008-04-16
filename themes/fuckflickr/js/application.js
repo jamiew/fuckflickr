@@ -66,7 +66,7 @@ function lightboxInit(){
 // we're not $ toyz, we're $$$$$ ballers.
 function $$$$$() {var a = new Array(); for (var i = 0; i < arguments.length; i++) {var b = arguments[i]; if (typeof b == 'string') b = document.getElementById(b); if (arguments.length == 1) return b; a.push(b);} return a;}
 function addEvent(elm, evType, fn, useCapture) {if (evType == "DOM") {return new domFunction(fn, useCapture);} else 	if (elm.addEventListener) {elm.addEventListener(evType, fn, useCapture); return true;} else if (elm.attachEvent) {return elm.attachEvent("on"+evType, fn);} return false;} 
-function getStyle(a, b) {return ((a.currentStyle) ? a.currentStyle[b] : ((window.getComputedStyle) ? document.defaultView.getComputedStyle(a,null).getPropertyValue(b) : false));}
+function getStyle(a, b) {c = ((a.currentStyle) ? a.currentStyle[b] : ((window.getComputedStyle) ? document.defaultView.getComputedStyle(a,null).getPropertyValue(b) : false)); return (c != null) ? c : 0;}
 function domFunction(f, a) {
 	var n = 0;
 	var t = setInterval(function() {
@@ -125,6 +125,7 @@ var clearance = {
 			}
 			
 			for (i=0; i<rs.length; i++) { // each row
+				if (!rs[i] == null) continue;
 				for (j=0; j<rs[i].length; j++) {// each column in row
 					rs[i][j].style.height = rsmh[i] +'px';
 				}
