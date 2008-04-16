@@ -90,16 +90,18 @@ p, h1, h2, h3, h4, h5 {
 
 #navigation {
   clear: both;
-  font-size: 13pt;
+  display: block;
+  font-size: 13pt; line-height: 17pt;
   background-color: #ffffaa;
-  padding: 10px 0 10px 20px;
+  padding: 12px 0 12px 20px;
   margin: 0 0 15px 0;
+  height: 1%; overflow: visible;
 }
 
 .rss {
   float: right;
   margin-right: 35px;
-  margin-top: -2px;
+  margin-top: -4px;
 }
 
 .pagination {clear: both; margin: 15px 0 5px 0; padding: 0;}
