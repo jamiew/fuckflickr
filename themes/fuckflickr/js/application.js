@@ -63,6 +63,82 @@ function lightboxInit(){
   }
 }
 
+// we're not $ toyz, we're $$$$$ ballers.
+function $$$$$() {var a = new Array(); for (var i = 0; i < arguments.length; i++) {var b = arguments[i]; if (typeof b == 'string') b = document.getElementById(b); if (arguments.length == 1) return b; a.push(b);} return a;}
+function addEvent(elm, evType, fn, useCapture) {if (evType == "DOM") {return new domFunction(fn, useCapture);} else 	if (elm.addEventListener) {elm.addEventListener(evType, fn, useCapture); return true;} else if (elm.attachEvent) {return elm.attachEvent("on"+evType, fn);} return false;} 
+function getStyle(a, b) {return ((a.currentStyle) ? a.currentStyle[b] : ((window.getComputedStyle) ? document.defaultView.getComputedStyle(a,null).getPropertyValue(b) : false));}
+function domFunction(f, a) {
+	var n = 0;
+	var t = setInterval(function() {
+var c = true; n++; if (typeof document.getElementsByTagName != 'undefined' && (document.getElementsByTagName('body')[0] != null || document.body != null)) {c = false; if (typeof a == 'object') {for (var i in a) {if ((a[i] == 'id' && getElement(i) == null) || (a[i] == 'tag' && document.getElementsByTagName(i).length < 1)) {c = true; break;}}} if(!c) { f(); clearInterval(t); }} if(n >= 60) clearInterval(t);
+	}, 250);
+}
+
+
+var clearance = {
+	init : function() {
+		if ($$$$$('images')) { // check if thumbs exist
+			this.ff_gc = $$$$$('images').childNodes;
+			var rmh = false; // max row height (false indicates first in new row)
+			var rmt = false; // max row offsetHeight (false indicates first in new row)
+			var rch = 0; // cur row height
+			var rct = 0; // cur row offsetHeight;
+			var r = 0; // row #
+			var rc = 0; // element increment
+			var rpc = 0; // cols per row
+			var rs = []; // array - sort into rows
+			var rsmh = []; // array - max height of each row
+
+			// break out into rows -- just get number across from first row
+			for (i=0; i<this.ff_gc.length; i++) {
+				if (this.ff_gc[i].offsetHeight == null) continue;
+
+				rct = this.findPos(this.ff_gc[i]); // get offsets
+
+				// convert into rows
+				if (rct[1] > rmt) {// current offset height is greater than previous -- must be new row
+					if (rmt !== false) break; // we've got number per row
+					rmt = rct[1];
+				}
+				rpc++;
+			}
+
+			var j = 0;
+			// get max height for each row
+			for (i=0; i<this.ff_gc.length; i++) {
+				if (this.ff_gc[i].offsetHeight == null) continue;
+
+				if (j == 0 || (j % rpc) == 0) {
+					if (j > 0) r++; // start new row if not first
+					rs[r] = []; // intialize row array
+					rsmh[r] = 0; // initalize max row height
+					rc = 0;
+				}
+
+				// offsetHeight includes padding, so we deduct padding since we are adding it to the element's height
+				rch = this.ff_gc[i].offsetHeight - parseInt(getStyle(this.ff_gc[i], 'padding-top')) - parseInt(getStyle(this.ff_gc[i], 'padding-bottom'));
+
+				if (rch > rsmh[r]) rsmh[r] = rch; // check max height
+				rs[r][rc] = this.ff_gc[i];
+				rc++;
+				j++;
+			}
+			
+			for (i=0; i<rs.length; i++) { // each row
+				for (j=0; j<rs[i].length; j++) {// each column in row
+					rs[i][j].style.height = rsmh[i] +'px';
+				}
+			}
+		}
+	},
+
+	findPos : function(a) {l = 0; t = 0; if (a.offsetParent) {do {l += a.offsetLeft; t += a.offsetTop;} while (a = a.offsetParent);} return [l,t];}
+};
+function runClearance() {clearance.init();}
+addEvent(window, 'resize', runClearance);
+addEvent(window, 'DOM', runClearance);
+
+
 
 // cookie functions, from http://www.quirksmode.org/js/cookies.html
 function createCookie(name,value,days) {
