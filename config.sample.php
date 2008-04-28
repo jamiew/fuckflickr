@@ -55,6 +55,9 @@ $IMAGES_PER_PAGE = 25;
 // what's yr theme? (keep the trailing slash)
 $THEME = 'fuckflickr/';
 
+// enable caching? important if you have lots of photos
+$CACHING_ENABLED = true;
+
 
 // ------------------
 
