@@ -189,6 +189,7 @@ p, h1, h2, h3, h4, h5 {
 }
 
 .preview span { /* the actual text of the preview */
+  background-color: #ffffff;
   color: black;
   padding: 2px 4px;
 }
