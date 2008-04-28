@@ -8,7 +8,7 @@ function getStyle(a, b) {c = ((a.currentStyle) ? a.currentStyle[b] : ((window.ge
 
 var clearance = {
 	init : function() {
-	  console.log("clearance.init()");
+    // console.log("clearance.init()");
 		if ($('#images')) { // check if thumbs exist
 			this.ff_gc = $('#images').children();
 			var rmh = false; // max row height (false indicates first in new row)
