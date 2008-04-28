@@ -8,6 +8,7 @@ function getStyle(a, b) {c = ((a.currentStyle) ? a.currentStyle[b] : ((window.ge
 
 var clearance = {
 	init : function() {
+	  console.log("clearance.init()");
 		if ($('#images')) { // check if thumbs exist
 			this.ff_gc = $('#images').children();
 			var rmh = false; // max row height (false indicates first in new row)
@@ -64,7 +65,8 @@ var clearance = {
 		}
 	},
 
-	findPos : function(a) {l = 0; t = 0; if (a.offsetParent) {do {l += a.offsetLeft; t += a.offsetTop;} while (a = a.offsetParent);} return [l,t];}
+	findPos : function(a) {
+	  l = 0; t = 0; if (a.offsetParent) {do {l += a.offsetLeft; t += a.offsetTop;} while (a = a.offsetParent);} return [l,t];}
 };
 
 
@@ -79,50 +81,62 @@ $(document).ready(function(){
     $(this).select();    
   });
 
-  //  lightboxen
+  // lightboxen
   lightboxInit();
-  $('#lightbox').change(lightboxInit);
-
-  // codaSlider + lazy loading = ultimate lightbox
-  // jQuery(window).bind("load", function() {
-    // $("#main").codaSlider()
-  // });
-  // $("#main img").lazyload({ /*placeholder : "/fatlab/fuckflickr/images/grey.gif"*/ });
+  
+  // setting toggle handlerr
+  $('input#lightbox').change(function(){
+    lightboxInit();
+    createCookie('fuckflickr_lightbox', status);  
+  });
+  
+  $('select#ff_sort').change(function(){
+    var ff_sort = this.options[this.selectedIndex].value;    
+    var basename = ff_sort.match(/[\/|\\]([^\\\/]+)\/$/); // ff_sort is the URL to redirect to
+    if(basename[1] == 'name') 
+      createCookie('fuckflickr_sort', 'name');
+    else
+      createCookie('fuckflickr_sort', 'date'); // FIXME should allow for more options than these, really. need to impose a /sort/date too
+    if (ff_sort != '' && ff_sort != '-1') 
+      location.href = ff_sort;
+  });
 	
-  // animated anchor scroll-to
+	
+  // anchor scroll-to and highlighting
   $('a[href*=#]').click(function() {
     if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
       var $target = $(this.hash);
       $target = $target.length && $target
       || $('[name=' + this.hash.slice(1) +']');
 
-	  // switch selected class
-	  $('#images .selected').removeClass('selected');
-	  $('#img_'+ this.hash.substr(1).replace(/\./, '_')).addClass('selected');
+  	  // switch selected class
+  	  $('#images .selected').removeClass('selected');
+  	  $('#img_'+ this.hash.substr(1).replace(/\./, '_')).addClass('selected');
 
       if ($target.length) {
         var targetOffset = $target.offset().top;
         $('html,body')
-        .animate({scrollTop: targetOffset}, 1000);
-       return false;
+        .animate({scrollTop: targetOffset-100}, 1000);
+       // return false;
       }
     }
   });
 
-  // Add class to selected item
-  if (location.hash != '' && $('#img_'+ location.hash.substr(1).replace(/\./, '_'))) $('#img_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
+  // highlight anchor class to selected item
+  if (location.hash != '' && $('#img_'+ location.hash.substr(1).replace(/\./, '_'))) 
+    $('#img_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
 
-  clearance.init();
+  // clearance.init();
 });
 
 $(window).resize(function() {
-  clearance.init();
+  // clearance.init();
 });
+
 
 // click event mgmnt for lightbox links
 function lightboxInit(){
-  status = $('#lightbox').attr('checked');
-  createCookie('fuckflickr_lightbox', status);
+  status = $('#lightbox').attr('checked') == true ? true : false;
   var images = $('.thumb a');
   if(status == true || status == 'true') { /* string for Safari */
     // imgLoader = new Image();// preload
@@ -144,10 +158,11 @@ function lightboxInit(){
 }
 
 
-
-
-// cookie functions, from http://www.quirksmode.org/js/cookies.html
-function createCookie(name,value,days) {
+/* 
+* cookie manip functions, from http://www.quirksmode.org/js/cookies.html
+*/
+function createCookie(name, value, days) {
+  // console.log("createCookie: "+name+" "+value+" "+days);
 	if (days) {
 		var date = new Date();
 		date.setTime(date.getTime()+(days*24*60*60*1000));

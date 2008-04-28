@@ -25,15 +25,13 @@ $begintime = $time;
 
 	<link href="<?php echo $this->dir_tmpl ?>css/stylesheet.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
 	<link href="<?php echo $this->dir_tmpl ?>css/thickbox.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
-	<!--[if lt IE 7]>
-	  <style type="text/css">.preview a {border-color: #000000;}</style>
-	<![endif]-->
+	<!--[if lt IE 7]><style type="text/css">.preview a { border-color: #000000; }</style><![endif]-->
+	
   <script type="text/javascript" charset="utf-8">var tb_pathToImage = "<?php echo $this->dir_tmpl ?>images/loading.gif";</script>
 	<script src="<?php echo $this->dir_tmpl ?>js/jquery.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $this->dir_tmpl ?>js/jquery.thickbox.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $this->dir_tmpl ?>js/jquery.preload-min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $this->dir_tmpl ?>js/application.js" type="text/javascript" charset="utf-8"></script>
-
 </head>
 <body>
 <div id="container">
@@ -41,9 +39,9 @@ $begintime = $time;
 
 		<!-- have it your way -->
 		<div id="settings"><form>
-			<?php $lightbox_enabled = (!empty($_COOKIE['fuckflickr_lightbox'])) ? $_COOKIE['fuckflickr_lightbox'] : FF_LIGHTBOX_DEFAULT; ?>
-			<label for="lightbox">use lightbox: </label><input type="checkbox" id="lightbox" name="lightbox" value="lightbox" <?php echo $lightbox_enabled ? 'checked="checked"' : '' ?> /><br />
-			<label for="ff_sort">sort by: </label><select id="ff_sort" name="sort" onchange="javascript: var ff_sort = this.options[this.selectedIndex].value; if (ff_sort != '' && ff_sort != '-1') location.href=ff_sort;">
+			<?php $lightbox_enabled = (empty($_COOKIE['fuckflickr_lightbox']) ? FF_LIGHTBOX_DEFAULT : $_COOKIE['fuckflickr_lightbox']); ?>
+			<label for="lightbox">use lightbox: </label><input type="checkbox" id="lightbox" name="lightbox" value="lightbox" <?php echo ($lightbox_enabled === true ? 'checked="checked"' : ''); ?> /><br />
+			<label for="ff_sort">sort by: </label><select id="ff_sort" name="sort">
 				<option value="<?php echo $this->urlFor('dir', $this->dir, '', '', 'sort') ?>"<?php if ($this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
 				<option value="<?php echo $this->urlFor('dir', $this->dir, '', 'sort=name', 'sort') ?>"<?php if ($this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
 			</select><noscript><input type="submit" value="Sort" /></noscript></form>

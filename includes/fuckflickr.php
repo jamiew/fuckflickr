@@ -112,6 +112,11 @@ class fuckflickr extends imageResize {
 	
 	// process the URL into sweet, sweet information
 	function parseRequest() {
+		
+		// seed cookie values first; TODO don't hard-code keys
+		if(!empty($_COOKIE['fuckflickr_sort'])) $this->reqs['sort'] = $_COOKIE['fuckflickr_sort'];
+		
+		// then parse URL
 		if (FF_CLEAN_URLS && empty($_REQUEST['dir'])) { // bail on dir queryvar, for dual-compatibility
 			$path = urldecode(str_replace(dirname($_SERVER['PHP_SELF']), '', $_SERVER['REQUEST_URI']));
 			$path = preg_replace('/^\//', '', $path); // remove preceding slash
@@ -132,8 +137,10 @@ class fuckflickr extends imageResize {
           }
         }
 
-        for ($i=0; $i<sizeof($reqs); $i+=2) if (!empty($reqs[$i])) $this->reqs[$reqs[$i]] = (isset($reqs[$i+1])) ? $reqs[$i+1] : true; // at least make true if set (ex. /d for debugging)
-			  unset($paths, $reqs);
+        for ($i=0; $i<sizeof($reqs); $i+=2) 
+					if (!empty($reqs[$i])) 
+						$this->reqs[$reqs[$i]] = (isset($reqs[$i+1])) ? $reqs[$i+1] : true; // at least make true if set (ex. /d for debugging)
+				  unset($paths, $reqs);
 			}
 		} else { // messy URL parsing
 			if (!empty($_REQUEST['dir'])) {
@@ -154,7 +161,7 @@ class fuckflickr extends imageResize {
 				}
 			}
 		}
-
+		
 		// set it and move on
 		$this->dir = $dir . ((preg_match('/\/$/', $dir)) ? '' : '/'); // add trailing slash if necessary
 	}
