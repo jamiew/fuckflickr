@@ -126,11 +126,11 @@ $(document).ready(function(){
   if (location.hash != '' && $('#img_'+ location.hash.substr(1).replace(/\./, '_'))) 
     $('#img_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
 
-  // clearance.init();
+  clearance.init();
 });
 
 $(window).resize(function() {
-  // clearance.init();
+  clearance.init();
 });
 
 
