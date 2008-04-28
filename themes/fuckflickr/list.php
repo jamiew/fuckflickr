@@ -45,9 +45,9 @@ foreach($images as $image):
 	$shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
 	$anchor = basename($this->urlFor('anchor', $image));
 ?>
-	<div class="thumb-wrapper">
-		<h2><?php echo $shortName ?></h2>
+	<div class="thumb-wrapper" id="img_<?php echo str_replace(array('#', '.'), array('', '_'), $anchor) ?>">
 		<a name="<?php echo str_replace('#','',$anchor) ?>" class="anchor"></a>
+		<h2><?php echo $shortName ?></h2>
 		<div class="thumb">
 			<a target="_blank" rel="lightbox" title="<?php echo $shortName ?>" href="<?php echo $this->urlFor('web', $image) ?>"><img src="<?php echo $this->urlFor('thumb', $image) ?>" alt="<?php echo $shortName ?>" title="<?php echo $shortName ?>" border="0" /></a>
 		</div>

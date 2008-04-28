@@ -144,6 +144,10 @@ p, h1, h2, h3, h4, h5 {
   padding: 20px 0;
 }
 
+#images .selected {
+  background: #FFFFAA;
+}
+
 .thumb-wrapper {
   width: 300px; 
   min-height: 260px;  /* FIXME does not work in IE6 (do we care?) */
@@ -185,14 +189,12 @@ p, h1, h2, h3, h4, h5 {
 }
 
 .preview span { /* the actual text of the preview */
-  background-color: white; 
   color: black;
   padding: 2px 4px;
 }
 
 .info {
 /*  min-height:80px;*/
-  background-color:white;
   font-size: 9px; /* non-gecko rendering engines actually go down to 1px; don't use that */ 
 }
 

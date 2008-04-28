@@ -56,7 +56,7 @@ class imageResize {
 
       $gife = new GIFEncoder($giff, $gifd, 0, 2, 0, 0, 0, 'url');
       fwrite(fopen($dest, 'wb'), $gife->GetAnimation());
-      for ($i=0; $i<sizeof($giff); $i++) unlink($giff[$i]);
+      //for ($i=0; $i<sizeof($giff); $i++) unlink($giff[$i]);
       $this->resize_count += (sizeof($arr)-1);
       return (is_file($dest));
     } else { // Do normal resize, whatever that is...
@@ -125,6 +125,7 @@ Class GIFDecoder {
     GIFDecoder::GIFGetByte(7);    // Logical Screen Descriptor
 
     $this->GIF_screen = $this->GIF_buffer;
+
     $this->GIF_colorF = $this->GIF_buffer[ 4 ] & 0x80 ? 1 : 0;
     $this->GIF_sorted = $this->GIF_buffer[ 4 ] & 0x08 ? 1 : 0;
     $this->GIF_colorC = $this->GIF_buffer[ 4 ] & 0x07;
@@ -177,7 +178,6 @@ Class GIFDecoder {
       $GIF_code = $this->GIF_colorC;
       $GIF_sort = $this->GIF_sorted;
     }
-    $GIF_size = 2 << $GIF_code;
     $this->GIF_screen [ 4 ] &= 0x70;
     $this->GIF_screen [ 4 ] |= 0x80;
     $this->GIF_screen [ 4 ] |= $GIF_code;
@@ -204,6 +204,7 @@ Class GIFDecoder {
     }
     $this->GIF_string .= chr ( 0x3B );
     $this->GIF_arrays [ ] = $this->GIF_string;
+    echo $GIF_screen[4] .'<br />';
   }
 
   function GIFGetByte ( $len ) {
@@ -215,7 +216,7 @@ Class GIFDecoder {
     return 1;
   }
   function GIFPutByte ( $bytes ) {for ( $i = 0; $i < count ( $bytes ); $i++ ) $this->GIF_string .= chr ( $bytes [ $i ] );}
-  function GIFGetFrames ( ) {return ( $this->GIF_arrays );}
+  function GIFGetFrames ( ) {echo 'frames<br />';return ( $this->GIF_arrays );}
   function GIFGetDelays ( ) {return ( $this->GIF_delays );}
 }
 
