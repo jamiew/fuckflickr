@@ -7,7 +7,6 @@
 ##############################################################
 
 // main beast
-// handles all requests
 
 class fuckflickr extends imageResize {
 	var $reqs = array();
@@ -37,7 +36,7 @@ class fuckflickr extends imageResize {
 
 	/*
 	*	actions to render
-	* TODO don't even really need these anymore
+	* TODO FIXME don't really need these anymore
 	*/
 	function viewList($file = 'list.php') {
 		$this->readDir(); // read this dir
@@ -51,44 +50,36 @@ class fuckflickr extends imageResize {
 	}
 
 	function viewPhoto($file = 'photo.php') {
-		// don't read anything...? 
 		// eventually allow a photo page, with title, descripton, comments, toytags, etc.
 		$this->openTemplate($file);
 	}
 
-	// find all media in our install and render as an XML feed
+
+	/*
+	* RSS: find all media in our install and render as an XML feed
+	*/
 	function viewRSS() {
-	  		
-    // build our own grep exclusion list; $this->exclude is too tight
+	  
+    // build our own exclusion list; $this->exclude is too tight
     $patterns = array();
-    foreach($this->exclude as $f)
+    foreach($this->exclude as $f) 
       if( empty($f) || $f == '.' || $f == '..' || $f == $this->dir ) continue; // some stuff doesn't fly w/ `find`
       else $patterns[] = $f;
     $pattern = join('\|', $patterns);
-    $files = explode("\n", shell_exec("find $this->dir -type f | grep -v -e '$pattern'")); // system call; less than ideal
+    $files = explode("\n", shell_exec("find $this->dir -type f | grep -v -e '$pattern'")); // system call; less than ideal, but fast
     
     // build file modified hash and sort
     $sort = array();
-    foreach ($files as $path) { //configure path
+    foreach ($files as $path) {
       $sort[$path] = filemtime($path);
-    } asort($sort); // sort by value, preserving keys
-    
+		}
+		arsort($sort);
+
     // limit & render
 		$this->ff_items = array_splice( array_keys($sort), 0, FF_RSS_ITEM_COUNT );
 		include('rss.php');
 	}
-	
-  function globr($sDir, $sPattern, $nFlags = NULL)
-  {
-    $sDir = escapeshellcmd($sDir);
-    $aFiles = glob("$sDir/$sPattern", $nFlags);
-    foreach (glob("$sDir/*", GLOB_ONLYDIR) as $sSubDir) {
-      $aSubFiles = rglob($sSubDir, $sPattern, $nFlags);
-      $aFiles = array_merge($aFiles, $aSubFiles);
-    }
-    return $aFiles;
-  }
-  
+	  
 
 	/*
 	*	parse the request URI and/or POST/GET vars
@@ -342,7 +333,7 @@ class fuckflickr extends imageResize {
 				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . $this->makeReqLinks('page', ((!empty($etc)) ? $etc : '')) : $this->dir_root .'index.php'. $this->makeReqLinks(false, 'dir='. urlencode($what) . ((!empty($etc)) ? $etc : ''));
 				break;
 			case 'original':
-				return $this->findURL() .'/'.$dir.$what;
+				return $this->findURL() .'/'.$dir.$what; // FIXME
 				break;
 			case 'web';
 				return $this->findURL() .'/'.$dir.FF_DATA_WEB_DIR.$what;
@@ -354,7 +345,7 @@ class fuckflickr extends imageResize {
 				return $this->dir_root . FF_DATA_DIR . $dir . str_replace(' ', '%20', $what) . FF_DATA_THUMB_DIR;
 				break;
 			case 'anchor':
-				return $this->urlFor('dir', $this->dir) .'#'. $what;
+				return $this->urlFor('dir', $this->dir) .'#'. urlencode($what);
 				break;
 			case 'rss':
 				return $this->dir_root.'rss';
@@ -370,6 +361,32 @@ class fuckflickr extends imageResize {
 	function findURL() {
 		return (($_SERVER["HTTPS"] == 'on') ? 'https' : 'http') .'://'. $_SERVER["SERVER_NAME"] . (($_SERVER["SERVER_PORT"] != '80') ? $_SERVER["SERVER_PORT"] : '') . dirname($_SERVER['PHP_SELF']);
 	}
+
+	// build args for clean or messy URLs
+	function makeReqLinks($excl=false, $incl=false) {
+		//if($this->debug) echo "makeReqLinks: excl = $excl  incl = $incl".FF_BR;
+		if (!is_array($excl) && !empty($excl)) $excl = explode(',', str_replace(' ', '', $excl));
+		if (!is_array($incl) && !empty($incl)) $incl = explode(',', str_replace(' ', '', $incl));
+
+		if (is_array($incl) && sizeof($incl) > 0) {
+			foreach ($incl as $a) {
+				list($k, $v) = explode('=', $a);
+				if (empty($k)) continue;
+				$args .= ((FF_CLEAN_URLS) ? $k .'/'. $v .'/' : ((!empty($args)) ? '&' : '?') . $k .'='. $v);
+			}
+		}
+
+		if (is_array($this->reqs) && sizeof($this->reqs) > 0) {
+			foreach ($this->reqs as $k=>$v) {
+				if ((is_array($excl) && in_array($k, $excl)) || empty($k)) continue;
+				$args .= ((FF_CLEAN_URLS) ? $k .'/'. $v .'/' : ((!empty($args)) ? '&' : '?') . $k .'='. $v);
+			}
+		}
+
+		return ((!empty($args)) ? $args : '');
+	}
+
+
 
 	// list sorting
 	function sortDir() {usort($this->ff_childs, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
@@ -401,29 +418,7 @@ class fuckflickr extends imageResize {
 		return $out;
 	}
 
-	function makeReqLinks($excl=false, $incl=false) {
-		//if($this->debug) echo "makeReqLinks: excl = $excl  incl = $incl".FF_BR;
-		if (!is_array($excl) && !empty($excl)) $excl = explode(',', str_replace(' ', '', $excl));
-		if (!is_array($incl) && !empty($incl)) $incl = explode(',', str_replace(' ', '', $incl));
-
-		if (is_array($incl) && sizeof($incl) > 0) {
-			foreach ($incl as $a) {
-				list($k, $v) = explode('=', $a);
-				if (empty($k)) continue;
-				$args .= ((FF_CLEAN_URLS) ? $k .'/'. $v .'/' : ((!empty($args)) ? '&' : '?') . $k .'='. $v);
-			}
-		}
-
-		if (is_array($this->reqs) && sizeof($this->reqs) > 0) {
-			foreach ($this->reqs as $k=>$v) {
-				if ((is_array($excl) && in_array($k, $excl)) || empty($k)) continue;
-				$args .= ((FF_CLEAN_URLS) ? $k .'/'. $v .'/' : ((!empty($args)) ? '&' : '?') . $k .'='. $v);
-			}
-		}
-
-		return ((!empty($args)) ? $args : '');
-	}
-
+	// pagination HTML for use in the theme
 	function pagesLinks($num=0, $what) {
 		if (FF_PER_PAGE < 1 || $num < 1) return ''; // Don't need no pages if their ain't nuttin' to sho'
 
@@ -557,6 +552,7 @@ function cleanDirname($path) {
 	return preg_replace('/^\//', '', preg_replace('/\/$/', '', $path) );
 }
 
+// parse extension from a filename
 function getFileExtension($str){
 	$i = strrpos($str, '.');
 		if (!$i) return '';
@@ -564,6 +560,7 @@ function getFileExtension($str){
 	return substr($str,$i+1,$l);
 }
 
+// wordwrap for PHP4, truncate a string
 if (!function_exists('wordwrap')) {
 	function wordWrap($text, $len=15) {
 		if (empty($text)) return '';
@@ -578,7 +575,5 @@ if (!function_exists('wordwrap')) {
 		return $r;
 	}
 }
-
-function pre_a($a) {echo '<pre>'. ((is_array($a) || is_object($a)) ? print_r($a, true) : $a) .'</pre>';}
 
 ?>

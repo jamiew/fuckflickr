@@ -43,16 +43,17 @@ if($use_pages)  //slice if we're paginating
 
 foreach($images as $image):
 	$shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
+	$anchor = basename($this->urlFor('anchor', $image));
 ?>
 	<div class="thumb-wrapper">
 		<h2><?php echo $shortName ?></h2>
-		<a name="<?php echo str_replace(' ', '-', $shortName) ?>" class="title"></a>
+		<a name="<?php echo str_replace('#','',$anchor) ?>" class="anchor"></a>
 		<div class="thumb">
 			<a target="_blank" rel="lightbox" title="<?php echo $shortName ?>" href="<?php echo $this->urlFor('web', $image) ?>"><img src="<?php echo $this->urlFor('thumb', $image) ?>" alt="<?php echo $shortName ?>" title="<?php echo $shortName ?>" border="0" /></a>
 		</div>
 		<div class="info">
-		 <p class="description"><?php echo $this->dir_info[$this->dir_name]['images'][$image]['desc'] ?></p>
-		 <p class="meta"><a class="short-name" href="#<?php echo $shortName ?>">#</a> 
+			<p class="description"><?php echo $this->dir_info[$this->dir_name]['images'][$image]['desc'] ?></p>
+			<p class="meta"><a class="short-name" href="<?php echo $anchor ?>">#</a> 
 			<a class="hi-res" href="<?php echo $this->urlFor('original', $image) ?>">Hi-Res Image</a>
 		 	<span class="embed">embed <input class="embed-code" type="text" size="24" value="<?php echo htmlentities('<a href="'. $this->urlFor('anchor', $shortName) .'"><img src="'. $this->urlFor('web', $image).'" alt="'.$shortName.'" title="'.$shortName.'" border="0" /></a>') ?>" /></span><br />
 		&nbsp;</p>
