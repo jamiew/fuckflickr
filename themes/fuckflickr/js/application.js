@@ -1,5 +1,14 @@
 // FUCK FLICKR application javascript
 
+// console decoy
+if (!("console" in window) || !("firebug" in console)) {
+    var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
+    "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
+
+    window.console = {};
+    for (var i = 0; i < names.length; ++i)
+        window.console[names[i]] = function() {}
+}
 
 // we're not $ toyz, we're $$$$$ ballers.
 function $$$$$() {var a = new Array(); for (var i = 0; i < arguments.length; i++) {var b = arguments[i]; if (typeof b == 'string') b = document.getElementById(b); if (arguments.length == 1) return b; a.push(b);} return a;}
@@ -87,16 +96,16 @@ $(document).ready(function(){
   // setting toggle handlerr
   $('input#lightbox').change(function(){
     lightboxInit();
-    createCookie('fuckflickr_lightbox', status);  
+    createCookie('fuckflickr_lightbox', status, 365);  
   });
   
   $('select#ff_sort').change(function(){
     var ff_sort = this.options[this.selectedIndex].value;    
     var basename = ff_sort.match(/[\/|\\]([^\\\/]+)\/$/); // ff_sort is the URL to redirect to
     if(basename[1] == 'name') 
-      createCookie('fuckflickr_sort', 'name');
+      createCookie('fuckflickr_sort', 'name', 365);
     else
-      createCookie('fuckflickr_sort', 'date'); // FIXME should allow for more options than these, really. need to impose a /sort/date too
+      createCookie('fuckflickr_sort', 'date', 365); // FIXME should allow for more options than these, really. need to impose a /sort/date too
     if (ff_sort != '' && ff_sort != '-1') 
       location.href = ff_sort;
   });
@@ -162,7 +171,7 @@ function lightboxInit(){
 * cookie manip functions, from http://www.quirksmode.org/js/cookies.html
 */
 function createCookie(name, value, days) {
-  // console.log("createCookie: "+name+" "+value+" "+days);
+  console.log("createCookie: "+name+" "+value+" "+days);
 	if (days) {
 		var date = new Date();
 		date.setTime(date.getTime()+(days*24*60*60*1000));

@@ -39,8 +39,12 @@ $begintime = $time;
 
 		<!-- have it your way -->
 		<div id="settings"><form>
-			<?php $lightbox_enabled = (empty($_COOKIE['fuckflickr_lightbox']) ? FF_LIGHTBOX_DEFAULT : $_COOKIE['fuckflickr_lightbox']); ?>
-			<label for="lightbox">use lightbox: </label><input type="checkbox" id="lightbox" name="lightbox" value="lightbox" <?php echo ($lightbox_enabled === true ? 'checked="checked"' : ''); ?> /><br />
+			<script type="text/javascript">console.log('lightbox cookie: <?php print_r($_COOKIE["fuckflickr_lightbox"]) ?>');</script>
+			<?php 
+				$lightbox_enabled = (empty($_COOKIE['fuckflickr_lightbox']) ? FF_LIGHTBOX_DEFAULT : $_COOKIE['fuckflickr_lightbox']);
+				$checked = ($lightbox_enabled == 'true' ? 'checked="checked"' : '');
+			?>
+			<label for="lightbox">use lightbox: </label><input type="checkbox" id="lightbox" name="lightbox" value="lightbox" <?php echo $checked ?> /><br />
 			<label for="ff_sort">sort by: </label><select id="ff_sort" name="sort">
 				<option value="<?php echo $this->urlFor('dir', $this->dir, '', '', 'sort') ?>"<?php if ($this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
 				<option value="<?php echo $this->urlFor('dir', $this->dir, '', 'sort=name', 'sort') ?>"<?php if ($this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
