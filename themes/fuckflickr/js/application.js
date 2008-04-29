@@ -2,12 +2,12 @@
 
 // console decoy
 if (!("console" in window) || !("firebug" in console)) {
-    var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
+  var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
     "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
 
-    window.console = {};
-    for (var i = 0; i < names.length; ++i)
-        window.console[names[i]] = function() {}
+  window.console = {};
+  for (var i = 0; i < names.length; ++i)
+    window.console[names[i]] = function() {};
 }
 
 // we're not $ toyz, we're $$$$$ ballers.
@@ -83,7 +83,7 @@ var clearance = {
 $(document).ready(function(){
 
   // start preloading link targets
-  $('#images a').preload();
+  // $('#images a').preload();
 
   // select embed code on click
   $('input.embed-code').click(function(){
@@ -136,6 +136,7 @@ $(document).ready(function(){
     $('#img_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
 
   clearance.init();
+  
 });
 
 $(window).resize(function() {
