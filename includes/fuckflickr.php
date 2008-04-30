@@ -43,7 +43,7 @@ class fuckflickr extends imageResize {
 		$this->processImages(); // parse imgz
 		if ($this->dir != FF_DATA_DIR) $this->evalDirInfo($this->dir_name, $this->dir);
 		for ($i=0; $i<sizeof($this->ff_dirs); $i++) {
-		  if($this->debug) echo 'aaa'. $this->ff_dirs[$i].'<br />'.$this->dir . $this->ff_dirs[$i] .'<br /><br />';
+		  if($this->debug) echo 'dir'. $this->ff_dirs[$i].'<br />'.$this->dir . $this->ff_dirs[$i] .'<br /><br />';
 		  $this->readDirInfo($this->ff_dirs[$i], $this->dir . $this->ff_dirs[$i]);
 	  }
 		$this->openTemplate($file);

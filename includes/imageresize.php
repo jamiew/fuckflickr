@@ -204,7 +204,6 @@ Class GIFDecoder {
     }
     $this->GIF_string .= chr ( 0x3B );
     $this->GIF_arrays [ ] = $this->GIF_string;
-    echo $GIF_screen[4] .'<br />';
   }
 
   function GIFGetByte ( $len ) {
@@ -216,7 +215,7 @@ Class GIFDecoder {
     return 1;
   }
   function GIFPutByte ( $bytes ) {for ( $i = 0; $i < count ( $bytes ); $i++ ) $this->GIF_string .= chr ( $bytes [ $i ] );}
-  function GIFGetFrames ( ) {echo 'frames<br />';return ( $this->GIF_arrays );}
+  function GIFGetFrames ( ) {return ( $this->GIF_arrays );}
   function GIFGetDelays ( ) {return ( $this->GIF_delays );}
 }
 
