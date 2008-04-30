@@ -22,3 +22,8 @@
 	#RewriteCond %{HTTP:Authorization}  !^$
 	#RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]
 </IfModule>
+
+<Files info.yml>
+order deny,allow
+deny from all
+</Files>
