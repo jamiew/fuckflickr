@@ -19,19 +19,21 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 			$image = str_replace('//','/',$image); // bug in RSS feed collection, FIXME
 			$dir = FF_DATA_DIR.preg_replace('/^\//', '', dirname(str_replace(FF_DATA_DIR, '', $image))).'/';
 			// $dir = cleanDirname($image);
-			$file = basename($image); 			
+			$filename = basename($image); 			
+			$imageURL = $this->urlFor('anchor', $filename, str_replace(FF_DATA_DIR, $dir)); /* nasty, should fix anchor urlFor... */
+
 ?>
 		<item>
-			<guid><?php print $this->urlFor('anchor', $file, $dir); ?></guid>
-			<link><?php print $this->urlFor('anchor', $file, $dir); ?></link>
-			<title><?php print $file; ?></title>
+			<guid><?php print $imageURL; ?></guid>
+			<link><?php print $imageURL ?></link>
+			<title><?php print $filename; ?></title>
 			<pubDate><?php print time(); // FIME ?></pubDate>
 <?php /*
 				<enclosure type="video/quicktime" url="http://www.rocketboom.com/video/rb_08_mar_28.mov" length="25512412" />
 				<media:content isDefault="true" type="video/quicktime" url="http://www.rocketboom.com/video/rb_08_mar_28.mov" fileSize="25512412" /><media:rating>nonadult</media:rating> 
 */?>
 			<description><![CDATA[
-				<a href="<?php print $this->urlFor('original', $file, $dir) ?>" title="<?php print $file ?>"><img src="<?php print $this->urlFor('thumb', $file, $dir) ?>" alt="<?php print $file ?>" border="0" /></a>
+				<a href="<?php print $this->urlFor('original', $filename, $dir) ?>" title="<?php print $filename ?>"><img src="<?php print $this->urlFor('thumb', $filename, $dir) ?>" alt="<?php print $filename ?>" border="0" /></a>
 				<p><?php print wordWrap($this->dir_info[$this->dir_name]['images'][$image]['desc'], 15) ?></p>]]>
 			</description>
 		</item>

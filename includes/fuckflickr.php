@@ -352,7 +352,7 @@ class fuckflickr extends imageResize {
 				return $this->dir_root . FF_DATA_DIR . $dir . str_replace(' ', '%20', $what) . FF_DATA_THUMB_DIR;
 				break;
 			case 'anchor':
-				return $this->urlFor('dir', $this->dir) .'#'. urlencode($what);
+				return /*$this->urlFor('dir', $this->dir)*/ $this->findURL().'/'.$dir.'#'.urlencode($what);
 				break;
 			case 'rss':
 				return $this->dir_root.'rss';
