@@ -126,7 +126,7 @@ $(document).ready(function(){
         var targetOffset = $target.offset().top;
         $('html,body')
         .animate({scrollTop: targetOffset-100}, 500);
-       // return false;
+       return false;
       }
     }
   });
