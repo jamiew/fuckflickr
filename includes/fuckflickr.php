@@ -484,7 +484,7 @@ class fuckflickr extends imageResize {
       if (sizeof($dirs) < 1) break;
       $title = array_pop($dirs);
     }
-		$content = 'directory:'. FF_NL . FF_SPACES .'title:'. ((isset($info['directory']['title'])) ? $info['directory']['title'] : (($title) ? $title : $name)) . FF_NL . FF_SPACES .'desc:'. $info['directory']['desc'] . FF_NL .'images:'. FF_NL;
+		$content = 'directory:'. FF_NL . FF_SPACES .'title:'. ((isset($info['directory']['title'])) ? $info['directory']['title'] : (($title) ? $title : preg_replace('/\/$/', '', $name))) . FF_NL . FF_SPACES .'desc:'. $info['directory']['desc'] . FF_NL .'images:'. FF_NL;
 
 		// go through each image
 		foreach ($this->ff_items as $v) 
