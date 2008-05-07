@@ -408,7 +408,7 @@ class fuckflickr extends imageResize {
 	function pageTitle() {
 		echo FF_NAME .' ' 
 		. (($this->dir != FF_DATA_DIR) ? FF_SEPARATOR.str_replace( array('data/', '/', '-', '_'), array('', '/', ' ', ' '), cleanDirname($this->dir)) : '')
-		. (defined(FF_ANTI_FLICKR_MESSAGE) ? FF_SEPARATOR.FF_ANTI_FLICKR_MESSAGE : '');
+		. (defined('FF_ANTI_FLICKR_MSG') ? FF_SEPARATOR.FF_ANTI_FLICKR_MSG : '');
 	}
 	
 	// shortcut for pagination links inside the theme
