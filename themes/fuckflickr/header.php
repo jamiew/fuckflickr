@@ -79,7 +79,7 @@ $begintime = $time;
 				if(empty($dir)) continue;
 				$path = FF_DATA_DIR . $built . $dir .'/';
 				if (empty($this->dir_info[$path . $dir])) $this->readDirInfo($path, $path);
-				$url = $this->urlFor( 'dir', $built . cleanDirname($dir) ); // third var behaving strangely
+				$url = preg_replace('/\/$/','',$this->urlFor( 'dir', $built . cleanDirname($dir)) ).'/'; // strip possible trailing slash (?) and add again
 				echo ' / <a href="'.$url.'">'. ((!empty($this->dir_info[$path]['directory']['title'])) ? $this->dir_info[$path]['directory']['title'] : $dir) .'</a>'; 
 				$built .= $dir .'/';
 			}
