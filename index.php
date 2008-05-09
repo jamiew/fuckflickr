@@ -30,6 +30,11 @@ define('FF_RSS_ITEM_COUNT', 15);
 define('FF_USE_TEMPLATE', (!empty($THEME)) ? $THEME . ((substr($THEME, -1, 1) != '/') ? '/' : '') : 'fuckflickr/');
 define('FF_CACHING_ENABLED', $CACHING_ENABLED);
 
+define(FF_NL, "\n"); // helpers
+define(FF_BR, '<br />'. FF_NL);
+define(FF_SPACES, '    ');
+
+
 // initialize environment
 $fuckflickr = new fuckflickr();
 

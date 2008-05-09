@@ -66,8 +66,4 @@ define(FF_DATA_THUMB_DIR, 'thumb/');
 define(FF_DATA_WEB_DIR, 'web/');
 define(FF_TEMPLATE_DIR, 'themes/');
 
-define(FF_NL, "\n"); // helpers
-define(FF_BR, '<br />'. FF_NL);
-define(FF_SPACES, '    ');
-
 ?>
