@@ -39,15 +39,15 @@ $begintime = $time;
 
 		<!-- have it your way -->
 		<div id="settings"><form>
-			<script type="text/javascript">console.log('lightbox cookie: <?php print_r($_COOKIE["fuckflickr_lightbox"]) ?>');</script>
+			<script type="text/javascript">console.log('lightbox cookie: <?php (array_key_exists('fuckflickr_lightbox', $_COOKIE)) ? print_r($_COOKIE["fuckflickr_lightbox"]) : '' ?>');</script>
 			<?php 
-				$lightbox_enabled = (empty($_COOKIE['fuckflickr_lightbox']) ? FF_LIGHTBOX_DEFAULT : $_COOKIE['fuckflickr_lightbox']);
+				$lightbox_enabled = (array_key_exists('fuckflickr_lightbox', $_COOKIE) && !empty($_COOKIE['fuckflickr_lightbox']) ? $_COOKIE['fuckflickr_lightbox'] : FF_LIGHTBOX_DEFAULT);
 				$checked = ($lightbox_enabled == 'true' ? 'checked="checked"' : '');
 			?>
 			<label for="lightbox">use lightbox: </label><input type="checkbox" id="lightbox" name="lightbox" value="lightbox" <?php echo $checked ?> /><br />
 			<label for="ff_sort">sort by: </label><select id="ff_sort" name="sort">
-				<option value="<?php echo $this->urlFor('dir', $this->dir, '', '', 'sort') ?>"<?php if ($this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
-				<option value="<?php echo $this->urlFor('dir', $this->dir, '', 'sort=name', 'sort') ?>"<?php if ($this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
+				<option value="<?php echo $this->urlFor('dir', $this->dir, '', '', 'sort') ?>"<?php if (array_key_exists('sort', $this->reqs) && $this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
+				<option value="<?php echo $this->urlFor('dir', $this->dir, '', 'sort=name', 'sort') ?>"<?php if (array_key_exists('sort', $this->reqs) && $this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
 			</select><noscript><input type="submit" value="Sort" /></noscript></form>
 		</div> <!-- /#settings -->
 		
@@ -75,8 +75,8 @@ $begintime = $time;
 		if ($this->dir != FF_DATA_DIR)
 			$parent = str_replace(FF_DATA_DIR, '', $this->dir);
 			$built = '';
-			foreach(explode('/', str_replace(FF_DATA_DIR, '', $this->dir)) as $dir) {
-				if(empty($dir)) continue;
+			foreach (explode('/', str_replace(FF_DATA_DIR, '', $this->dir)) as $dir) {
+				if (empty($dir)) continue;
 				$path = FF_DATA_DIR . $built . $dir .'/';
 				if (empty($this->dir_info[$path . $dir])) $this->readDirInfo($path, $path);
 				$url = preg_replace('/\/$/','',$this->urlFor( 'dir', $built . cleanDirname($dir)) ).'/'; // strip possible trailing slash (?) and add again

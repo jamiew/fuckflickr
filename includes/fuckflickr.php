@@ -13,6 +13,8 @@ class fuckflickr extends imageResize {
 	var $ff_items = array();
 	var $ff_dirs = array();
 	var $ff_vals = array();
+	var $debug, $web_dir, $thumb_dir, $ff_childs, $ff_files, $dirname;
+	
 
 	/*
 	* constructor & dispatcher
@@ -28,6 +30,9 @@ class fuckflickr extends imageResize {
 		$this->ff_total = 0;
 		$this->dir_date = 0;
 		$this->timenow = time();
+		$this->dir_web_name = str_replace('/', '', FF_DATA_WEB_DIR);
+		$this->dir_thumb_name = str_replace('/', '', FF_DATA_THUMB_DIR);
+
 
 		// kick off this mother
 		$this->processRequest();
@@ -97,9 +102,9 @@ class fuckflickr extends imageResize {
 		$this->dir_thumbs = $this->dir.FF_DATA_THUMB_DIR;
 		$this->dir_web = $this->dir.FF_DATA_WEB_DIR;
 		
-		$this->cur_page = ((is_numeric($this->reqs['page']) && $this->reqs['page'] > 0 || $this->reqs['page'] == 'all') ? floor($this->reqs['page']) : 1);
-		$this->sortByDate = ($this->reqs['sort'] == 'name') ? false : true; // sort by the date uploaded, otherwise sort by filename (if sorting is enabled)
-		$this->exclude = array('.', '..', $this->dir_origs, $this->web_dir, $this->thumb_dir, 'web', 'thumb', '.svn', '.git', '.DS_Store', 'info.yml');
+		$this->cur_page = (array_key_exists('page', $this->reqs) && ((is_numeric($this->reqs['page']) && $this->reqs['page'] > 0 || $this->reqs['page'] == 'all')) ? floor($this->reqs['page']) : 1);
+		$this->sortByDate = (array_key_exists('sort', $this->reqs) && $this->reqs['sort'] == 'name') ? false : true; // sort by the date uploaded, otherwise sort by filename (if sorting is enabled)
+		$this->exclude = array('.', '..', $this->dir_origs, $this->web_dir, $this->thumb_dir, $this->dir_web_name, $this->dir_thumb_name, '.svn', '.git', '.DS_Store', 'info.yml');
 		$this->exclude = array_merge($this->exclude, split(',', FF_EXCLUDE_DIRS)); // Combine with config'd excludes
 	}
 	
@@ -144,7 +149,7 @@ class fuckflickr extends imageResize {
 			}
 		} else { // messy URL parsing
 			if (!empty($_REQUEST['dir'])) {
-				$prefix = preg_match('/^data/', $_REQUEST['dir']) ? '' : FF_DATA_DIR; // BACK COMPAT 07/11/22: no longer prefix messy URLs w/ DATA_DIR
+				$prefix = preg_match('/^'. FF_DIR_DATA .'/', $_REQUEST['dir']) ? '' : FF_DATA_DIR; // BACK COMPAT 07/11/22: no longer prefix messy URLs w/ DATA_DIR
 				$dir = $prefix . urldecode(stripslashes($_REQUEST['dir']));
 			} else {
 				$dir = FF_DATA_DIR;
@@ -179,7 +184,7 @@ class fuckflickr extends imageResize {
 		}
 	
 		// don't allow *anything* w/ a dot
-		$testDir = explode('data', $this->dir);
+		$testDir = explode(FF_DATA_DIR, $this->dir);
 		if (strstr($testDir[1],'.')) {
 			echo "folders cannot have dots (.) in them";
 			exit;
@@ -198,7 +203,7 @@ class fuckflickr extends imageResize {
 			if ($this->debug) echo 'reading directory '. $this->dir . FF_BR;
 
 			while ($rfile = $rdir->read()) {
-				if (in_array($rfile, $this->exclude) || substr($rfile, -5) == 'thumb' || substr($rfile, -3) == 'web') continue; // FUCK THAT DIR
+				if (in_array($rfile, $this->exclude) || substr($rfile, (-1*strlen($this->dir_thumb_name))) == $this->dir_thumb_name || substr($rfile, (-1*strlen($this->dir_web_name))) == $this->dir_web_name) continue; // FUCK THAT DIR
 				if(is_dir($this->dir . $rfile) ) {
 					$this->ff_childs[] = array($rfile, filemtime($this->dir . $rfile));
 					$sortDir = true;
@@ -236,7 +241,7 @@ class fuckflickr extends imageResize {
 	*	resize all unresized images
 	*/	
 	function processImages() {
-		if ($this->dir != 'data' && sizeof($this->ff_items) > 0){
+		if ($this->dir != FF_DATA_DIR && sizeof($this->ff_items) > 0){
 			// check if directory is writable [halvfet]
 			if (!is_writable($this->dir)) {
 				if ($this->debug) echo 'making directory writable'. FF_BR;
@@ -366,11 +371,13 @@ class fuckflickr extends imageResize {
 
 	// dynamically pick up where the application is installed
 	function findURL() {
-		return (($_SERVER["HTTPS"] == 'on') ? 'https' : 'http') .'://'. $_SERVER["SERVER_NAME"] . (($_SERVER["SERVER_PORT"] != '80') ? $_SERVER["SERVER_PORT"] : '') . dirname($_SERVER['PHP_SELF']);
+		return ((array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') .'://'. $_SERVER['SERVER_NAME'] . (($_SERVER['SERVER_PORT'] != '80') ? $_SERVER['SERVER_PORT'] : '') . dirname($_SERVER['PHP_SELF']);
 	}
 
 	// build args for clean or messy URLs
 	function makeReqLinks($excl=false, $incl=false) {
+		$args = '';
+
 		//if($this->debug) echo "makeReqLinks: excl = $excl  incl = $incl".FF_BR;
 		if (!is_array($excl) && !empty($excl)) $excl = explode(',', str_replace(' ', '', $excl));
 		if (!is_array($incl) && !empty($incl)) $incl = explode(',', str_replace(' ', '', $incl));
@@ -407,7 +414,7 @@ class fuckflickr extends imageResize {
 	// shortcut for generating navigation breadcrumbs / titles
 	function pageTitle() {
 		echo FF_NAME .' ' 
-		. (($this->dir != FF_DATA_DIR) ? FF_SEPARATOR.str_replace( array('data/', '/', '-', '_'), array('', '/', ' ', ' '), cleanDirname($this->dir)) : (defined('FF_ANTI_FLICKR_MSG') ? FF_SEPARATOR.FF_ANTI_FLICKR_MSG : ''));
+		. (($this->dir != FF_DATA_DIR) ? FF_SEPARATOR.str_replace( array(FF_DATA_DIR, '/', '-', '_'), array('', '/', ' ', ' '), cleanDirname($this->dir)) : (defined('FF_ANTI_FLICKR_MSG') ? FF_SEPARATOR.FF_ANTI_FLICKR_MSG : ''));
 	}
 	
 	// shortcut for pagination links inside the theme

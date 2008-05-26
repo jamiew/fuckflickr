@@ -61,9 +61,9 @@ $CACHING_ENABLED = true;
 
 // ------------------
 
-define(FF_DATA_DIR, 'data/');
-define(FF_DATA_THUMB_DIR, 'thumb/');
-define(FF_DATA_WEB_DIR, 'web/');
-define(FF_TEMPLATE_DIR, 'themes/');
+define('FF_DATA_DIR', 'data/');
+define('FF_DATA_THUMB_DIR', 'thumb/');
+define('FF_DATA_WEB_DIR', 'web/');
+define('FF_TEMPLATE_DIR', 'themes/');
 
 ?>

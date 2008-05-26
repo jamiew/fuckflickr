@@ -6,6 +6,12 @@
 ##  |__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
 ##############################################################
 
+// Check for safe mode
+if (ini_get('safe_mode')) {
+	echo 'quit playin\' it safe. get a sysadmin to turn off safe mode.';
+	exit;
+}
+
 include_once('includes/imageresize.php');
 include_once('includes/fuckflickr.php');
 include_once('config.php');
@@ -30,9 +36,9 @@ define('FF_RSS_ITEM_COUNT', 15);
 define('FF_USE_TEMPLATE', (!empty($THEME)) ? $THEME . ((substr($THEME, -1, 1) != '/') ? '/' : '') : 'fuckflickr/');
 define('FF_CACHING_ENABLED', $CACHING_ENABLED);
 
-define(FF_NL, "\n"); // helpers
-define(FF_BR, '<br />'. FF_NL);
-define(FF_SPACES, '    ');
+define('FF_NL', "\n"); // helpers
+define('FF_BR', '<br />'. FF_NL);
+define('FF_SPACES', '    ');
 
 
 // initialize environment
