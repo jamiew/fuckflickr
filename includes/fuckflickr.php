@@ -241,7 +241,7 @@ class fuckflickr extends imageResize {
 	*	resize all unresized images
 	*/	
 	function processImages() {
-		if ($this->dir != FF_DATA_DIR && sizeof($this->ff_items) > 0){
+		if (sizeof($this->ff_items) > 0){
 			// check if directory is writable [halvfet]
 			if (!is_writable($this->dir)) {
 				if ($this->debug) echo 'making directory writable'. FF_BR;
