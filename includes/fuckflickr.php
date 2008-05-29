@@ -33,7 +33,6 @@ class fuckflickr extends imageResize {
 		$this->dir_web_name = str_replace('/', '', FF_DATA_WEB_DIR);
 		$this->dir_thumb_name = str_replace('/', '', FF_DATA_THUMB_DIR);
 
-
 		// kick off this mother
 		$this->processRequest();
 
@@ -48,7 +47,7 @@ class fuckflickr extends imageResize {
 		$this->processImages(); // parse imgz
 		if ($this->dir != FF_DATA_DIR) $this->evalDirInfo($this->dir_name, $this->dir);
 		for ($i=0; $i<sizeof($this->ff_dirs); $i++) {
-		  if($this->debug) echo 'dir'. $this->ff_dirs[$i].'<br />'.$this->dir . $this->ff_dirs[$i] .'<br /><br />';
+		  debug('dir'. $this->ff_dirs[$i].'<br />'.$this->dir . $this->ff_dirs[$i] .'<br />');
 		  $this->readDirInfo($this->ff_dirs[$i], $this->dir . $this->ff_dirs[$i]);
 	  }
 		$this->openTemplate($file);
@@ -93,9 +92,8 @@ class fuckflickr extends imageResize {
 		$this->parseRequest();
 		$this->cleanRequest();
 
-		//$this->debug = (isset($this->reqs['d']));
-		//$this->debug = true;
-		if ($this->debug) echo '<strong>Entering debug mode.</strong>'. FF_BR;
+		if(isset($this->reqs['d'])) define(FF_DEBUG, true);
+		debug('<strong>Entering debug mode.</strong>');
 
 		$this->dir_name = $this->makeDirName($this->dir);
 		$this->dir_origs = $this->dir;
@@ -200,7 +198,7 @@ class fuckflickr extends imageResize {
 		if (empty($dirname)) $dirname = $this->dir;
 		$rdir = @dir($dirname);
 		if ($rdir) {
-			if ($this->debug) echo 'reading directory '. $this->dir . FF_BR;
+			debug('reading directory '. $this->dir);
 
 			while ($rfile = $rdir->read()) {
 				if (in_array($rfile, $this->exclude) || substr($rfile, (-1*strlen($this->dir_thumb_name))) == $this->dir_thumb_name || substr($rfile, (-1*strlen($this->dir_web_name))) == $this->dir_web_name) continue; // FUCK THAT DIR
@@ -220,8 +218,8 @@ class fuckflickr extends imageResize {
 				}
 			}
 			$rdir->close();
-		} elseif ($this->debug) {
-			echo 'could not read directory '. $this->dir;
+		} else {
+			debug('could not read directory '. $this->dir);
 		}
 
 		// Do sorting (if enabled)
@@ -244,19 +242,19 @@ class fuckflickr extends imageResize {
 		if (sizeof($this->ff_items) > 0){
 			// check if directory is writable [halvfet]
 			if (!is_writable($this->dir)) {
-				if ($this->debug) echo 'making directory writable'. FF_BR;
+				debug('making directory writable');
 				chmod($this->dir, 0777);
 			}
 
 			// check if thumbs directory exists
 			if (!file_exists($this->dir_thumbs)) {
-				if ($this->debug) echo 'making thumbs directory'. FF_BR;
+				debug('making thumbs directory');
 				mkdir($this->dir_thumbs, 0777);
 			}
 
 			// check if web directory exists
 			if (!file_exists($this->dir_web)){
-				if ($this->debug) echo 'making web directory'. FF_BR;
+				debug('making web directory');
 				mkdir($this->dir_web, 0777);
 			}
 	
@@ -267,17 +265,17 @@ class fuckflickr extends imageResize {
 				if (!file_exists($this->dir_web . $item) || !file_exists($this->dir_thumbs . $item) ) {
 
 					// if failed the first time (web), it should fail the second time (thumb). [halvfet]
-					if($this->debug) echo 'making web image for '. $item . FF_BR;
+					debug('making web image for '. $item);
 					if ($this->resizeImage($this->dir . $item, $this->dir_web . $item, 600, 450, 93, 1)) {
 						// make a thumbnail
-						if ($this->debug) echo 'making thumbnail for '. $item. FF_BR;
+						debug('making thumbnail for '. $item);
 						if ($this->resizeImage($this->dir_web . $item, $this->dir_thumbs . $item, 300, 225, 93, 0)) {
               // moved thumbnail gen script outside of loop to ensure it is generated
-						} elseif ($this->debug) {
-							echo '<strong>FAILED</strong> making thumb image for '. $item . FF_BR;
+						} else {
+							debug('<strong>FAILED</strong> making thumb image for '. $item);
 						}
-					} elseif ($this->debug) {
-						echo '<strong>FAILED</strong> making web image for '. $item . FF_BR;
+					} else {
+						debug('<strong>FAILED</strong> making web image for '. $item);
 					}
 					$this->resize_count++;
 				}
@@ -286,7 +284,7 @@ class fuckflickr extends imageResize {
 			// make our index page thumbnail
 			// if thumbnail does not exist or directory has been modified since last generation, make it
 			if (sizeof($this->ff_items) > 0 && (!is_file($this->dir_thumbs . FF_INDEX_THUMB_NAME) || $this->dir_date > filemtime($this->dir_thumbs . FF_INDEX_THUMB_NAME))) {
-		    if ($this->debug) echo 'making index thumbnail for '. $this->dir . FF_BR;
+		    debug('making index thumbnail for '. $this->dir);
 				$items = $this->ff_files;
 				usort($items, array($this, 'dateSort'));
 				$item = array_shift($items);
@@ -296,8 +294,8 @@ class fuckflickr extends imageResize {
 					//$pf = dirname(dirname(dirname($this->dir_thumbs . FF_INDEX_THUMB_NAME)));
 					//if (file_exists($this->dir_thumbs . FF_INDEX_THUMB_NAME) && $pf != 'data' && !file_exists($pf .'/thumb/')) mkdir($pf .'/thumb/');
 					//@copy($this->dir_thumbs . FF_INDEX_THUMB_NAME, $pf .'/thumb/'. FF_INDEX_THUMB_NAME);
-				} elseif ($this->debug) {
-					echo '<strong>FAILED</strong> making index thumbnail image for '. $this->dir . FF_BR;
+				} else {
+					debug('<strong>FAILED</strong> making index thumbnail image for '. $this->dir);
 				}
 			}
 		}		
@@ -338,7 +336,7 @@ class fuckflickr extends imageResize {
 		$what = str_replace(FF_DATA_DIR, '', $what);
 		switch ($type) {
 			case 'dir':
-				//if($this->debug) print "urlFor(dir): $what, $dir, $etc, $excl".FF_BR;
+				//debug("urlFor(dir): $what, $dir, $etc, $excl");
 				return (FF_CLEAN_URLS) ? $this->dir_root . $dir . $what . (($excl) ? $this->makeReqLinks($excl, ((!empty($etc)) ? $etc : '')) : '') : $this->dir_root .'index.php'. $this->makeReqLinks($excl, 'dir='.urlencode($what) . ((!empty($etc)) ? $etc : ''));
 				break;
 			case 'page':
@@ -365,7 +363,7 @@ class fuckflickr extends imageResize {
 				echo 'ERROR: bad url type \''. $type .'\' requested'. FF_BR;
 				return 'do-not-comprehenend-homey';
 				break;
-		}	
+		}
 	}	
 
 
@@ -378,7 +376,7 @@ class fuckflickr extends imageResize {
 	function makeReqLinks($excl=false, $incl=false) {
 		$args = '';
 
-		//if($this->debug) echo "makeReqLinks: excl = $excl  incl = $incl".FF_BR;
+		//debug("makeReqLinks: excl = $excl  incl = $incl");
 		if (!is_array($excl) && !empty($excl)) $excl = explode(',', str_replace(' ', '', $excl));
 		if (!is_array($incl) && !empty($incl)) $incl = explode(',', str_replace(' ', '', $incl));
 
@@ -403,12 +401,12 @@ class fuckflickr extends imageResize {
 
 
 	// list sorting
-	function sortDir() {usort($this->ff_childs, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
-	function sortItems() {usort($this->ff_files, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort')));}
+	function sortDir() { usort($this->ff_childs, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort'))); }
+	function sortItems() { usort($this->ff_files, array($this, (($this->sortByDate) ? 'dateSort' : 'nameSort'))); }
 
 	// comparison functions
-	function dateSort($a, $b) {return ($a[1] > $b[1]) ? -1 : 1;}
-	function nameSort($a, $b) {return ($a[0] > $b[0]) ? 1 : -1;}
+	function dateSort($a, $b) { return ($a[1] > $b[1]) ? -1 : 1; }
+	function nameSort($a, $b) { return ($a[0] > $b[0]) ? 1 : -1; }
 
 
 	// shortcut for generating navigation breadcrumbs / titles
@@ -423,7 +421,7 @@ class fuckflickr extends imageResize {
 		$out = '';
 		$ct_start = ($this->cur_page-1)*FF_PER_PAGE;
 		$ct_end = (($ct_start + FF_PER_PAGE) > sizeof($this->ff_items)) ? sizeof($this->ff_items) : ($ct_start + FF_PER_PAGE);
-		if (sizeof($this->ff_items) > 0) {// || sizeof($this->ff_dirs) > 0) { // will eventually list # of nested dirs
+		if (sizeof($this->ff_items) > 0) { 
 		  $out = '<p>';
 		  if (FF_PER_PAGE > 0 && sizeof($this->ff_items) > 0) $out .= '<strong>Page</strong>'.$this->pagesLinks(sizeof($this->ff_items), $this->dir).' &ndash; '.FF_NL;
 		  $out .= 'Viewing '. ((sizeof($this->ff_items) > 0) ? ((FF_PER_PAGE > 0 && $this->cur_page != 'all') ? ($ct_start+1) .'&ndash;'. $ct_end .' of' : 'all').' '.sizeof($this->ff_items).' image'. ((sizeof($this->ff_items) != 1) ? 's' : '') : ' nothing') .'</p>' .FF_NL;
@@ -448,7 +446,7 @@ class fuckflickr extends imageResize {
   // Allow only a read of yaml file (if exists)
   function readDirInfo($name, $dir) {
     if (is_file($dir . FF_DIR_INFO_FILENAME)) {
-  		if ($this->debug) echo 'reading readonly directory info file'. FF_BR;
+  		debug('reading readonly directory info file');
   		$content = file_get_contents($dir . FF_DIR_INFO_FILENAME);
   		if (!empty($content)) $this->dir_info[$name] = $this->readYAML($content);
   	}
@@ -459,7 +457,7 @@ class fuckflickr extends imageResize {
 		if (!$dir) $dir = $this->dir;
 
 		if (is_file($dir . FF_DIR_INFO_FILENAME)) {
-			if ($this->debug) echo 'reading directory info file'. FF_BR;
+			debug('reading directory info file');
 			$content = file_get_contents($dir . FF_DIR_INFO_FILENAME);
 			if (!empty($content)) {
 				$this->dir_info[$name] = $this->readYAML($content);
@@ -475,8 +473,8 @@ class fuckflickr extends imageResize {
 		} elseif (!$repeat) {
 			// Lets create one
 			$this->makeYAML($name, $dir, false);
-		} elseif ($this->debug) { // Prevent from looping if cannot read or create YAML file
-			echo 'could not create or read dir file'. FF_BR;
+		} else { // Prevent from looping if cannot read or create YAML file
+			debug('could not create or read dir file');
 		}
 	}
 	
@@ -499,15 +497,15 @@ class fuckflickr extends imageResize {
 
 		// open directory info yaml
 		if ($r = fopen($dir . FF_DIR_INFO_FILENAME, 'w+')) {
-			if ($this->debug) echo 'making directory info file'. FF_BR;
+			debug('making directory info file');
 			fwrite($r, $content);
 			fclose($r);
 			chmod($dir. FF_DIR_INFO_FILENAME, 0777);
 
 			// reload information
 			$this->evalDirInfo($name, $dir, true);
-		} elseif ($this->debug) {
-			echo 'could not make directory info file'. FF_BR;
+		} else {
+			debug('could not make directory info file');
 		}
 	}
 
@@ -516,7 +514,7 @@ class fuckflickr extends imageResize {
 		$content = str_replace(array("\t"), array(FF_SPACES), $content);
 		$lines = explode(FF_NL, $content);
 
-		if ($this->debug) echo 'reading...';
+		debug('reading...');
 
 		$s = 0; // level count
 		$r = array(); // values array
@@ -543,7 +541,7 @@ class fuckflickr extends imageResize {
 			eval('$r'. $ps .' = '. ((!empty($d)) ? '\''. str_replace('\'', '\\\'', $d) .'\'' : '\'\'') .';'); // best way to write out multi-dimensional array		
 		}
 
-		if ($this->debug) echo 'done.' . FF_BR;
+		debug("done");
 		return $r;
 	}
 }
@@ -587,6 +585,14 @@ if (!function_exists('wordwrap')) {
 		if (sizeof($words) > $len) $r .= '...';
 		return $r;
 	}
+}
+
+
+// debugging
+// TODO option for error_log vs. custom logfile vs. stdout
+function debug($str, $where = 'stdout') {
+	if(FF_DEBUG === true)
+		print $str.FF_BR;
 }
 
 ?>
