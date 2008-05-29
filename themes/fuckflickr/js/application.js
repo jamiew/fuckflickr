@@ -11,10 +11,13 @@ if (!("console" in window) || !("firebug" in console)) {
 }
 
 // we're not $ toyz, we're $$$$$ ballers.
+// aka grotto clearance getElementByID :P
 function $$$$$() {var a = new Array(); for (var i = 0; i < arguments.length; i++) {var b = arguments[i]; if (typeof b == 'string') b = document.getElementById(b); if (arguments.length == 1) return b; a.push(b);} return a;}
 function getStyle(a, b) {c = ((a.currentStyle) ? a.currentStyle[b] : ((window.getComputedStyle) ? document.defaultView.getComputedStyle(a,null).getPropertyValue(b) : false)); return (c != null) ? c : 0;}
 
-
+// identify max height on image items; long descriptions can break
+// the hard width set in CSS
+// TODO replace w/ jQuery version
 var clearance = {
 	init : function() {
     // console.log("clearance.init()");
