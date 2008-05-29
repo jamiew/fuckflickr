@@ -12,18 +12,17 @@
 
 ## for clean urls, uncomment all below lines
 <IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteCond %{REQUEST_FILENAME} -f [OR]
-	RewriteCond %{REQUEST_FILENAME} -d
-	RewriteRule ^(.+) - [PT,L]
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^(.+) - [PT,L]
+  RewriteRule ^(.*) index.php
 
-	RewriteRule ^(.*) index.php
-
-	#RewriteCond %{HTTP:Authorization}  !^$
-	#RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]
+  #RewriteCond %{HTTP:Authorization}  !^$
+  #RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]
 </IfModule>
 
 <Files info.yml>
-order deny,allow
-deny from all
+  order deny,allow
+  deny from all
 </Files>
