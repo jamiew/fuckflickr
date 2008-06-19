@@ -22,7 +22,7 @@ class fuckflickr extends imageResize {
 	function fuckflickr() {
 	
 		// figure out what's going on
-		$this->dir_root = $this->findURL() .'/';
+		$this->dir_root = $this->findURL();
 		$this->dir_incl = $this->dir_root .'includes/';
 		$this->dir_fs_tmpl = FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
 		$this->dir_tmpl = $this->dir_root . FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
@@ -121,7 +121,7 @@ class fuckflickr extends imageResize {
 		
 		// then parse URL
 		if (FF_CLEAN_URLS && empty($_REQUEST['dir'])) { // bail on dir queryvar, for dual-compatibility
-			$path = urldecode(str_replace(dirname($_SERVER['PHP_SELF']), '', $_SERVER['REQUEST_URI']));
+			$path = urldecode((dirname($_SERVER['PHP_SELF']) != '/') ? str_replace(dirname($_SERVER['PHP_SELF']), '', $_SERVER['REQUEST_URI']) : $_SERVER['REQUEST_URI']); // If outside of root folder
 			$path = preg_replace('/^\//', '', $path); // remove preceding slash
 			$path = preg_replace('/\?'. $_SERVER['QUERY_STRING'] .'/', '', $path); // Remove any phony GET queries
 			$paths = explode('/', $path);
@@ -369,7 +369,8 @@ class fuckflickr extends imageResize {
 
 	// dynamically pick up where the application is installed
 	function findURL() {
-		return ((array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') .'://'. $_SERVER['SERVER_NAME'] . (($_SERVER['SERVER_PORT'] != '80') ? $_SERVER['SERVER_PORT'] : '') . dirname($_SERVER['PHP_SELF']);
+	  $url = ((array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') .'://'. $_SERVER['SERVER_NAME'] . (($_SERVER['SERVER_PORT'] != '80') ? $_SERVER['SERVER_PORT'] : '') . dirname($_SERVER['PHP_SELF']);
+		return $url . ((substr($url, -1) != '/') ? '/' : '');
 	}
 
 	// build args for clean or messy URLs

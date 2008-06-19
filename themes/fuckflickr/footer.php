@@ -4,7 +4,7 @@
 ?>
 		<div id="footer">
 			<?php if (FF_CC_LICENSE != '') echo 'Content licensed under a '. FF_CC_LICENSE; ?> 
-			- powered by <a href="http://fffff.at/fuckflickr-info">FuckFlickr</a> <br />
+			- powered by <a href="http://www.fuckflickr.com">FuckFlickr</a> <br />
 		
 			<?php 
 			//output page rendering stats 
