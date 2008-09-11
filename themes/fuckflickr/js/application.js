@@ -1,92 +1,56 @@
 // FUCK FLICKR application javascript
 
-// console decoy
+// Firebug console decoy
 if (!("console" in window) || !("firebug" in console)) {
   var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
     "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
 
   window.console = {};
-  for (var i = 0; i < names.length; ++i)
+  for (var i = 0; i < names.length; ++i) 
     window.console[names[i]] = function() {};
 }
 
-// we're not $ toyz, we're $$$$$ ballers.
-// aka grotto clearance getElementByID :P
-function $$$$$() {var a = new Array(); for (var i = 0; i < arguments.length; i++) {var b = arguments[i]; if (typeof b == 'string') b = document.getElementById(b); if (arguments.length == 1) return b; a.push(b);} return a;}
-function getStyle(a, b) {c = ((a.currentStyle) ? a.currentStyle[b] : ((window.getComputedStyle) ? document.defaultView.getComputedStyle(a,null).getPropertyValue(b) : false)); return (c != null) ? c : 0;}
 
-// identify max height on image items; long descriptions can break
-// the hard width set in CSS
-// TODO replace w/ jQuery version
-var clearance = {
-	init : function() {
-    // console.log("clearance.init()");
-		if ($('#images')) { // check if thumbs exist
-			this.ff_gc = $('#images').children();
-			var rmh = false; // max row height (false indicates first in new row)
-			var rmt = false; // max row offsetHeight (false indicates first in new row)
-			var rch = 0; // cur row height
-			var rct = 0; // cur row offsetHeight;
-			var r = 0; // row #
-			var rc = 0; // element increment
-			var rpc = 0; // cols per row
-			var rs = []; // array - sort into rows
-			var rsmh = []; // array - max height of each row
 
-			// break out into rows -- just get number across from first row
-			for (i=0; i<this.ff_gc.length; i++) {
-				if (this.ff_gc[i].offsetHeight == null) continue;
+// items float and can be of varible height, so we need to clear each "row" (and update on resize)
+// TODO: this would be a nice little jQuery plugin
+var rowClearance = {
+	init : function(target) {
+	  console.log("rowClearance.init: "+target);
+    this.clearRows(target);
 
-				rct = this.findPos(this.ff_gc[i]); // get offsets
+    $(window).resize(function() {
+      rowClearance.clearRows(target);
+    });
+  },
+  
+  clearRows : function(target) {
 
-				// convert into rows
-				if (rct[1] > rmt) {// current offset height is greater than previous -- must be new row
-					if (rmt !== false) break; // we've got number per row
-					rmt = rct[1];
-				}
-				rpc++;
-			}
+    // TESTME: pseudoselectors vs. $($()[0])? speed? cleanliness? another way to do this?
+    var itemWidth = $('.item:first').width();
+    var pageWidth = $('#items').width() - 40; // +20 for left/right padding; FIXME; doesn't jquery.dimension do box-model?
+    var itemsPerRow = Math.floor(pageWidth/itemWidth);
 
-			var j = 0;
-			// get max height for each row
-			for (i=0; i<this.ff_gc.length; i++) {
-				if (this.ff_gc[i].offsetHeight == null) continue;
+    // console.log("itemWidth="+itemWidth+"  pageWidth="+pageWidth+"  perRow="+itemsPerRow);
 
-				if (j == 0 || (j % rpc) == 0) {
-					if (j > 0) r++; // start new row if not first
-					rs[r] = []; // intialize row array
-					rsmh[r] = 0; // initalize max row height
-					rc = 0;
-				}
-
-				// offsetHeight includes padding, so we deduct padding since we are adding it to the element's height
-				rch = this.ff_gc[i].offsetHeight - parseInt(getStyle(this.ff_gc[i], 'padding-top')) - parseInt(getStyle(this.ff_gc[i], 'padding-bottom'));
-
-				if (rch > rsmh[r]) rsmh[r] = rch; // check max height
-				rs[r][rc] = this.ff_gc[i];
-				rc++;
-				j++;
-			}
-			
-			for (i=0; i<rs.length; i++) { // each row
-				if (!rs[i] == null) continue;
-				for (j=0; j<rs[i].length; j++) {// each column in row
-					rs[i][j].style.height = rsmh[i] +'px';
-				}
-			}
-		}
-	},
-
-	findPos : function(a) {
-	  l = 0; t = 0; if (a.offsetParent) {do {l += a.offsetLeft; t += a.offsetTop;} while (a = a.offsetParent);} return [l,t];}
+    $('.item.clear').removeClass('clear');
+    $('.item').each(function(i){
+      // if the top has changed we're in a new row
+      offset = $(this).offset();
+      if( i == itemsPerRow ) {
+        $(this).addClass('clear');
+      }
+    });
+    
+  }
 };
 
 
-
+// jquery magic
 $(document).ready(function(){
 
   // start preloading link targets
-  // $('#images a').preload();
+  // $('#items a').preload();
 
   // select embed code on click
   $('input.embed-code').click(function(){
@@ -122,8 +86,8 @@ $(document).ready(function(){
       || $('[name=' + this.hash.slice(1) +']');
 
   	  // switch selected class
-  	  $('#images .selected').removeClass('selected');
-  	  $('#img_'+ this.hash.substr(1).replace(/\./, '_')).addClass('selected');
+  	  $('#items .selected').removeClass('selected');
+  	  $('#item_'+ this.hash.substr(1).replace(/\./, '_')).addClass('selected');
 
       if ($target.length) {
         var targetOffset = $target.offset().top;
@@ -134,28 +98,27 @@ $(document).ready(function(){
     }
   });
 
-  // highlight anchor class to selected item
-  if (location.hash != '' && $('#img_'+ location.hash.substr(1).replace(/\./, '_'))) 
-    $('#img_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
-
-  clearance.init();
+  // highlight anchor class of selected item
+  if (location.hash != '' && $('#item_'+ location.hash.substr(1).replace(/\./, '_'))) 
+    $('#item_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
   
+  // initialize row clearing
+  rowClearance.init('#items');
+
 });
 
-$(window).resize(function() {
-  clearance.init();
-});
 
 
 // click event mgmnt for lightbox links
 function lightboxInit(){
   status = $('#lightbox').attr('checked') == true ? true : false;
-  var images = $('.thumb a');
+  var items = $('.thumb a');
   if(status == true || status == 'true') { /* string for Safari */
     // imgLoader = new Image();// preload
     // imgLoader.src = "images/ajax-loader.gif";
+
     // engage thickboxing
-    images.click(function(){
+    items.click(function(){
     	var t = this.title || this.name || null;
     	var a = this.href || this.alt;
     	var g = this.rel || false;
@@ -166,7 +129,7 @@ function lightboxInit(){
     });
   }
   else {
-    images.unbind('click');
+    items.unbind('click');
   }
 }
 
