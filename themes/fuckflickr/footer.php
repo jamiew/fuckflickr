@@ -11,7 +11,7 @@
 			$time = explode(" ", microtime());
 			$endtime = $time[1] + $time[0];
 			$totaltime = ($endtime - $begintime);
-			echo 'Rendered page in ' .substr($totaltime, 0, 8). ' seconds.';
+			echo 'Rendered page in ' .substr($totaltime, 0, 6). ' seconds.';
 			?>
 		</div> <!-- /#footer -->
 		

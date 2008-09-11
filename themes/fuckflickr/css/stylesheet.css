@@ -36,10 +36,12 @@ p, h1, h2, h3, h4, h5 {
   padding: 2px 0; 
 }
 
+.clear { clear: both; }
+
 
 /******* layout *********/
 #container {
-  min-width: 980px; /* 3 images wide; TODO doesn't work in IE */
+  min-width: 980px; /* 3 items wide; TODO doesn't work in IE */
 }
 
 #header {
@@ -125,8 +127,6 @@ p, h1, h2, h3, h4, h5 {
 }
 
 .directory a {
-/*  width: 100px;*/
-/*  height: 20px;*/
   background: #efe url('../images/folder.png') no-repeat 0 50%;
   border: 1px solid #d0f5d0;
   padding: 15px 10px 15px 40px;
@@ -139,16 +139,18 @@ p, h1, h2, h3, h4, h5 {
 }
 
 
-#images {
+#items {
+  list-style: none;
   clear: both; 
   padding: 20px 0;
 }
 
-#images .selected {
+#items .selected {
   background: #fcf;
 }
 
-.thumb-wrapper {
+
+.item {
   width: 300px; 
   min-height: 260px;  /* FIXME does not work in IE6 (do we care?) */
   float: left;
@@ -210,5 +212,5 @@ h1#title {margin: 5px 0 3px 0; padding: 0; font-size: 24px; line-height: 27px;}
 h3#description {font-size: 13px; margin: 5px 0 3px 0; padding: 0; line-height: 15px; font-weight: normal;}
 
 
-#directories:after, #images:after {content: "."; clear: both; display: block; visibility: hidden; font-size: 0; line-height: 0; height: 0;}
+#directories:after, #items:after {content: "."; clear: both; display: block; visibility: hidden; font-size: 0; line-height: 0; height: 0;}
 

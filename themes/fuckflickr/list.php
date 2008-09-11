@@ -21,21 +21,21 @@ if (!empty($this->ff_items) || !empty($this->ff_dirs)):
 
 
 <?php if(!empty($this->ff_dirs)): ?>
-<div id="directories">
+<ul id="directories">
 	<?php for ($i=0; $i<sizeof($this->ff_dirs); $i++): ?>	
 <?php $path = $this->dir . $this->ff_dirs[$i]; ?>
-	<div class="preview">
+	<li class="preview">
 		<a href="<?php echo $this->urlFor('dir', $this->dir . $this->ff_dirs[$i]) ?>" style="background-image: url(<?php echo $this->urlFor('indexThumb', 'data/'. $this->dir . $this->ff_dirs[$i]) . FF_INDEX_THUMB_NAME ?>);">
 			<span><?php echo ((!empty($this->dir_info[$path]['directory']['title'])) ? $this->dir_info[$path]['directory']['title'] : str_replace(array('/', '_', '-'), array('', ' ', ' '), $this->ff_dirs[$i])) ?></span>
 		</a>
-	</div>
+	</li>
 	<?php endfor; ?>
-</div> <!-- /#directories -->
+</ul> <!-- /#directories -->
 <?php endif; ?>
 
 <div class="pagination"><?php print $this->pagination() ?></div>
 
-<div id="images">
+<ul id="items">
 <?php
 $images = $this->ff_items;
 if($use_pages)  //slice if we're paginating
@@ -45,7 +45,7 @@ foreach($images as $image):
 	$shortName = ((!empty($this->dir_info[$this->dir_name]['images'][$image]['title'])) ? $this->dir_info[$this->dir_name]['images'][$image]['title'] : substr($image,0,-4));
 	$anchor = basename($this->urlFor('anchor', $image));
 ?>
-	<div class="thumb-wrapper" id="img_<?php echo str_replace(array('#', '.'), array('', '_'), $anchor) ?>">
+	<li class="item" id="item_<?php echo str_replace(array('#', '.'), array('', '_'), $anchor) ?>">
 		<a name="<?php echo str_replace('#','',$anchor) ?>" class="anchor"></a>
 		<h2><?php echo $shortName ?></h2>
 		<div class="thumb">
@@ -58,9 +58,9 @@ foreach($images as $image):
 		 	<span class="embed">embed <input class="embed-code" type="text" size="24" value="<?php echo htmlentities('<a href="'.$this->urlFor('anchor', $image, $this->dir_name.'/').'"><img src="'. $this->urlFor('web', $image).'" alt="'.$shortName.'" title="'.$shortName.'" border="0" /></a>') ?>" /></span><br />
 		&nbsp;</p>
 		</div>
-	</div>
+	</li>
 <?php endforeach ?>
-</div> <!-- /#images -->
+</ul> <!-- /#images -->
 
 <div class="pagination"><?php print $this->pagination() ?></div>
 

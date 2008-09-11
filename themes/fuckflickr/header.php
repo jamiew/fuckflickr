@@ -6,6 +6,7 @@
 $time = explode(' ', microtime());
 $time = $time[1] + $time[0];
 $begintime = $time;
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -58,8 +59,8 @@ $begintime = $time;
 	
 		<!-- anti-yahoo propaganda; TODO make configurable -->
 		<div id="fuckflickr-info">
-			<a href="http://fffff.at/fuckflickr-info">Click here</a> to download fuckflickr 
-			and learn more about why we should all be boycotting yahoo products.
+			<a href="http://fffff.at/fuckflickr-info">Click here</a> to download FuckFlickr 
+			and learn more about why we should all be boycotting Yahoo products.
 		</div>
 	
 	</div> <!-- /#header -->
