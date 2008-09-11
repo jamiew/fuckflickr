@@ -592,7 +592,7 @@ if (!function_exists('wordwrap')) {
 // debugging
 // TODO option for error_log vs. custom logfile vs. stdout
 function debug($str, $where = 'stdout') {
-	if(FF_DEBUG === true)
+	if(FF_DEBUG === true || $_GET['debug'])
 		print $str.FF_BR;
 }
 
