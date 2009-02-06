@@ -32,6 +32,7 @@ $begintime = $time;
 	<script src="<?php echo $this->dir_tmpl ?>js/jquery.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $this->dir_tmpl ?>js/jquery.thickbox.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $this->dir_tmpl ?>js/jquery.preload-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="<?php echo $this->dir_tmpl ?>js/flashembed.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $this->dir_tmpl ?>js/application.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
@@ -54,7 +55,7 @@ $begintime = $time;
 		
 		<!-- humping graphic -->
 		<div id="logo">
-			<a href="<?php echo $this->dir_root ?>"><img src="<?php echo $this->dir_tmpl ?>images/logos/fflickr_logo_PG_150px.gif" border="0" style="background-color: #FFFFFF;" /></a>
+			<a href="<?php echo $this->dir_root ?>"><img src="<?php echo $this->dir_tmpl ?>images/fflickr_logo_PG_150px.gif" border="0" style="background-color: #FFFFFF;" /></a>
 		</div>
 	
 		<!-- anti-yahoo propaganda; TODO make configurable -->

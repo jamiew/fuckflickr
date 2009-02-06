@@ -6,12 +6,6 @@
 ##  |__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
 ##############################################################
 
-// Check for safe mode
-if (ini_get('safe_mode')) {
-	echo 'quit playin\' it safe. get a sysadmin to turn off safe mode.';
-	exit;
-}
-
 include_once('includes/imageresize.php');
 include_once('includes/fuckflickr.php');
 include_once('config.php');
@@ -33,12 +27,13 @@ define('FF_DIR_INFO_FILENAME', 'info.yml');
 define('FF_IMG_QUALITY', ($IMAGE_QUALITY > 0 && $IMAGE_QUALITY <= 5) ? $IMAGE_QUALITY : 3);
 define('FF_PER_PAGE', (is_numeric($IMAGES_PER_PAGE) && $IMAGES_PER_PAGE > 0) ? floor($IMAGES_PER_PAGE) : 0);
 define('FF_RSS_ITEM_COUNT', 15);
-define('FF_USE_TEMPLATE', (!empty($THEME)) ? $THEME . ((substr($THEME, -1, 1) != '/') ? '/' : '') : 'fuckflickr/');
+// define('FF_USE_TEMPLATE', (!empty($THEME)) ? $THEME . ((substr($THEME, -1, 1) != '/') ? '/' : '') : 'fuckflickr/');
+define('FF_UES_TEMPLATE','');
 define('FF_CACHING_ENABLED', $CACHING_ENABLED);
 
-define('FF_NL', "\n"); // helpers
-define('FF_BR', '<br />'. FF_NL);
-define('FF_SPACES', '    ');
+define(nl, "\n"); // helpers
+define(br, '<br />'. nl);
+define(FF_SPACES, '    ');
 
 
 // initialize environment

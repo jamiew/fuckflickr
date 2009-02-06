@@ -9,7 +9,6 @@ $url = $this->findURL();
 
 <?php if (sizeof($this->ff_dirs) > 0): ?>
 
-
 <?php else: ?>
 	<p>Ain't no flicks to show; throw some ish in <strong>/data</strong>!</p>
 <?php endif ?>

@@ -8,7 +8,6 @@
         default fuckflickr theme - HACK AWAY MOFO
 */
 
-
 /******** general *******/
 body {
   font-size: 10px; 
@@ -139,10 +138,14 @@ p, h1, h2, h3, h4, h5 {
 }
 
 
+
+
+
+/****** entry display *****/
 #items {
   list-style: none;
   clear: both; 
-  padding: 20px 0;
+/*  padding: 20px 0;*/
 }
 
 #items .selected {
@@ -150,25 +153,43 @@ p, h1, h2, h3, h4, h5 {
 }
 
 
+/* common across all items */
+.item-wrapper, .item {
+
+}  
+.item-wrapper {
+  width: 300px; 
+  /*min-height: 260px;*/  /* FIXME does not work in IE6 (do we care?) */
+}
+
 .item {
-  width: 300px; 
-  min-height: 260px;  /* FIXME does not work in IE6 (do we care?) */
   float: left;
+  width: 300px;  /* default, gets overridden */
+  height: 225px; /* default, gets overridden */
   margin-right: 10px;
-}
-
-.thumb {
-  position:relative; 
-  top: 0px; 
-  left: 0px; 
-  width: 300px; 
-  height: 225px; 
+  padding-bottom: 10px;
   overflow: hidden;
-  text-align: center; 
-  background-color: black; 
-  margin-right: 10px;
+  text-align: left;
 }
 
+/* specific filetypes */
+
+/* images */
+.image { height: 300px; }
+.image .thumb { text-align: center; background-color: black; }
+.image .thumb img { height: 240px; overflow: hidden; }
+
+/* audio */
+.audio { height: 100px; background-color: #eee; }
+
+/* videos */
+.video { width: 500px; height: 440px; }
+.video-wrapper { width: 500px; height: 390px; }
+.video .meta { background: black; color: white; padding: 5px 8px; }
+.video .meta a { color: white; }
+.video input.embed-code { background-color: #eee; color: #777; border: 1px solid #999; padding: 2px; }
+
+/* ..... */
 .preview a { /* given a background-image dynamically */
   float: left;
   position: relative; 
@@ -208,9 +229,20 @@ p, h1, h2, h3, h4, h5 {
 .embed { margin-left: 8px; }
 
 
-h1#title {margin: 5px 0 3px 0; padding: 0; font-size: 24px; line-height: 27px;}
-h3#description {font-size: 13px; margin: 5px 0 3px 0; padding: 0; line-height: 15px; font-weight: normal;}
+/* I think this stuff is new and needs to be grouped elsewhere TODO */
+h1#title {
+  margin: 5px 0 3px 0; 
+  padding: 0; 
+  font-size: 24px; 
+  line-height: 27px;
+}
+h3#description {
+  font-size: 13px; 
+  margin: 5px 0 3px 0; 
+  padding: 0; 
+  line-height: 15px; 
+  font-weight: normal;
+}
 
 
-#directories:after, #items:after {content: "."; clear: both; display: block; visibility: hidden; font-size: 0; line-height: 0; height: 0;}
 

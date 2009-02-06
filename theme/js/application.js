@@ -1,56 +1,19 @@
 // FUCK FLICKR application javascript
 
-// Firebug console decoy
+// console decoy
 if (!("console" in window) || !("firebug" in console)) {
   var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml",
     "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
 
   window.console = {};
-  for (var i = 0; i < names.length; ++i) 
+  for (var i = 0; i < names.length; ++i)
     window.console[names[i]] = function() {};
 }
 
-
-
-// items float and can be of varible height, so we need to clear each "row" (and update on resize)
-// TODO: this would be a nice little jQuery plugin
-var rowClearance = {
-	init : function(target) {
-	  console.log("rowClearance.init: "+target);
-    this.clearRows(target);
-
-    $(window).resize(function() {
-      rowClearance.clearRows(target);
-    });
-  },
-  
-  clearRows : function(target) {
-
-    // TESTME: pseudoselectors vs. $($()[0])? speed? cleanliness? another way to do this?
-    var itemWidth = $('.item:first').width();
-    var pageWidth = $('#items').width() - 40; // +20 for left/right padding; FIXME; doesn't jquery.dimension do box-model?
-    var itemsPerRow = Math.floor(pageWidth/itemWidth);
-
-    // console.log("itemWidth="+itemWidth+"  pageWidth="+pageWidth+"  perRow="+itemsPerRow);
-
-    $('.item.clear').removeClass('clear');
-    $('.item').each(function(i){
-      // if the top has changed we're in a new row
-      offset = $(this).offset();
-      if( i == itemsPerRow ) {
-        $(this).addClass('clear');
-      }
-    });
-    
-  }
-};
-
-
-// jquery magic
 $(document).ready(function(){
 
   // start preloading link targets
-  // $('#items a').preload();
+  // $('#images a').preload();
 
   // select embed code on click
   $('input.embed-code').click(function(){
@@ -86,8 +49,8 @@ $(document).ready(function(){
       || $('[name=' + this.hash.slice(1) +']');
 
   	  // switch selected class
-  	  $('#items .selected').removeClass('selected');
-  	  $('#item_'+ this.hash.substr(1).replace(/\./, '_')).addClass('selected');
+  	  $('#images .selected').removeClass('selected');
+  	  $('#img_'+ this.hash.substr(1).replace(/\./, '_')).addClass('selected');
 
       if ($target.length) {
         var targetOffset = $target.offset().top;
@@ -98,13 +61,11 @@ $(document).ready(function(){
     }
   });
 
-  // highlight anchor class of selected item
-  if (location.hash != '' && $('#item_'+ location.hash.substr(1).replace(/\./, '_'))) 
-    $('#item_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
-  
-  // initialize row clearing
-  rowClearance.init('#items');
+  // highlight anchor class to selected item
+  if (location.hash != '' && $('#img_'+ location.hash.substr(1).replace(/\./, '_'))) 
+    $('#img_'+ location.hash.substr(1).replace(/\./, '_')).addClass('selected');
 
+  
 });
 
 
@@ -112,13 +73,12 @@ $(document).ready(function(){
 // click event mgmnt for lightbox links
 function lightboxInit(){
   status = $('#lightbox').attr('checked') == true ? true : false;
-  var items = $('.thumb a');
+  var images = $('.thumb a');
   if(status == true || status == 'true') { /* string for Safari */
     // imgLoader = new Image();// preload
     // imgLoader.src = "images/ajax-loader.gif";
-
     // engage thickboxing
-    items.click(function(){
+    images.click(function(){
     	var t = this.title || this.name || null;
     	var a = this.href || this.alt;
     	var g = this.rel || false;
@@ -129,7 +89,7 @@ function lightboxInit(){
     });
   }
   else {
-    items.unbind('click');
+    images.unbind('click');
   }
 }
 
@@ -160,3 +120,47 @@ function readCookie(name) {
 function eraseCookie(name) {
 	createCookie(name,"",-1);
 }
+
+
+
+
+
+
+/* FLOWRPLAYERIFICATION */
+/*
+ flashembed("video_<?php print $index ?>", 
+	{
+		src:'<?php echo $this->dir_tmpl ?>/flowplayer/FlowPlayerDark.swf',
+		// width: <?php echo $this->video_width ?>, 
+		// height: <?php echo $this->video_height ?>,
+	},
+	
+	// second argument is Flowplayer specific configuration. See full list:
+	// http://flowplayer.org/player/configuration.html
+	{config: { 
+		videoFile: '<?php print $this->urlFor('web', $item) ?>.flv',
+		// videoLink: 'TODO',
+		
+		// playlist?
+	  // { playList: [
+	  //    { url: 'http://flowplayer.org/skiing.mp4' },
+	  //    { url: 'http://flowplayer.org/river.mp4' },
+	  //    { url: 'http://flowplayer/hacking.mp4' },
+	  //    { url: 'http://www.images.org/byebye.jpg' }
+	  //    ]
+	  // }			
+
+		autoPlay: false,
+		autoBuffering: true,
+		loop: false,
+		// initialScale: 'scale',
+		initialScale: 'fit',
+		controlBarBackgroundColor:'0x000000',
+
+		// minimalist vimeo-esque look
+		controlsOverVideo: 'ease',			
+		controlBarBackgroundColor: -1,
+		controlBarGloss: 'low',
+	}} 
+);
+*/
