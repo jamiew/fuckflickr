@@ -7,11 +7,11 @@
 ##############################################################
 
 // name your fflickr install
-$NAME = "FuckLife Proving Grounds";
+$NAME = "FuckFlickr";
 
 // URL to your fuckflickr system, with trailing slash
 // (optional, should autodetect just fine)
-$LINK = "http://fffff.at/fucklife/";
+$LINK = "http://fffff.at/fuckflickr/";
 
 // use clean urls? like "/fuckflickr/directory" instead of "/fuckflickr/index.php?dir=directory"
 // you must also uncomment the lines in the .htaccess file!
