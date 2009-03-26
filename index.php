@@ -6,9 +6,9 @@
 ##  |__|  |_____|____||__|__|__| |__|__||____||__|__|__|    ##
 ##############################################################
 
-include_once('includes/imageresize.php');
-include_once('includes/fuckflickr.php');
-include_once('config.php');
+require_once('includes/imageresize.php');
+require_once('includes/fuckflickr.php');
+require_once('config.php');
 
 // redeclare/sanitize configuration vars
 // FIXME TODO: this is *extremely* heinous
