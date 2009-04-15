@@ -30,7 +30,7 @@ $FILETYPES = array(
 $CC_LICENSE = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 License</a>';
 
 // your anti flickr message for the title & footer of each page
-$ANTI_FLICKR_MSG = "FUCK FLICKR, YOUTUBE, MUXTAPE";
+$ANTI_FLICKR_MSG = "Yahoo is a narc";
 
 // separator for title
 $SEPARATOR = ' &ndash; ';

@@ -16,11 +16,18 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 		<generator>FuckFlickr</generator>
 <?php // not indented so the raw XML looks nice 
 		foreach($this->ff_items as $item):
+
 			$item = str_replace('//','/',$item); // bug in RSS feed collection, FIXME
-			$dir = FF_DATA_DIR.preg_replace('/^\//', '', dirname(str_replace(FF_DATA_DIR, '', $item))).'/';
-			// $dir = cleanDirname($item);
-			$filename = basename($item); 			
-			$itemURL = $this->urlFor('anchor', $filename, str_replace(FF_DATA_DIR, $dir)); /* nasty, should fix anchor urlFor... */
+			print "item = $item".nl;
+			$filename = basename($item);			
+			print "filename = $filename".nl;
+			$dirname = cleanDirname($item);
+			print "dirname = $dirname".nl;
+			$raw_dir = dirname(cleanDirname($item)).'/';
+			print "raw_dir = $raw_dir".nl;
+			$dir = str_replace(FF_DATA_DIR, '', $raw_dir); // w/o the /data/
+			print "dir = $dir".nl;
+			$itemURL = $this->urlFor('anchor', $filename, $dir); /* nasty, should fix anchor urlFor... */
 
 ?>
 		<item>
@@ -33,7 +40,7 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 				<media:content isDefault="true" type="video/quicktime" url="http://www.rocketboom.com/video/rb_08_mar_28.mov" fileSize="25512412" /><media:rating>nonadult</media:rating> 
 */?>
 			<description><![CDATA[
-				<a href="<?php print $this->urlFor('original', $filename, $dir) ?>" title="<?php print $filename ?>"><img src="<?php print $this->urlFor('thumb', $filename, $dir) ?>" alt="<?php print $filename ?>" border="0" /></a>
+				<a href="<?php print $this->urlFor('original', $filename, $raw_dir) ?>" title="<?php print $filename ?>"><img src="<?php print $this->urlFor('thumb', $filename, $raw_dir) ?>" alt="<?php print $filename ?>" border="0" /></a>
 				<p><?php print wordWrap($this->dir_info[$this->dir_name]['images'][$item]['desc'], 15) ?></p>]]>
 			</description>
 		</item>

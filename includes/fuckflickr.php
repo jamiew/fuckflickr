@@ -134,6 +134,7 @@ class fuckflickr extends imageResize {
 			$reqs = $paths;
 
       $dir = FF_DATA_DIR;
+      @mkdir($dir); // create if it doesn't exist
 
       if (sizeof($paths) > 0) {
         for ($i=0; $i<sizeof($paths); $i++) {
