@@ -71,7 +71,7 @@ $begintime = $time;
 		<a href="<?php print $this->urlFor('rss', $this->dir); ?>" title="RSS feed of new adds" class="rss"><img src="<?php echo $this->dir_tmpl ?>images/feed-icon32x32.png" border="0" /></a>		
 		
 		<!-- regular title -->
-		<a href="<?php echo $this->dir_root ?>"><?php echo FF_NAME ?></a>
+		<a href="http://fffff.at">FFFFF.AT</a> / <a href="<?php echo $this->dir_root ?>">FUCKFLICKR</a>
 		<?php 
 		// TODO clean this up. could use a directory(), parent(), breadcrumbs(), navigation() etc.
 		if ($this->dir != FF_DATA_DIR)

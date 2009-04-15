@@ -19,8 +19,8 @@ $embed = '<embed src="'.$this->dir_tmpl.'flowplayer/FlowPlayerDark.swf" bgcolor=
 	<?php if($description): ?><p class="description"><?php print $description; ?></p><?php endif; ?>
 	<p class="meta">
 		<a class="short-name" href="<?php echo $anchor ?>">#</a> 
-		&nbsp;&nbsp;&nbsp;&nbsp;<a class="hi-res" href="<?php echo $this->urlFor('original', $item) ?>">Download Video</a>
-		&nbsp;&nbsp;
+		<a class="hi-res" href="<?php echo $this->urlFor('original', $item) ?>">video</a>
+		
 	 	<span class="embed">embed 
 			<input class="embed-code" type="text" size="30" value="<?php echo htmlentities($embed.'<br /><a href="'.$this->urlFor('anchor', $item, $this->dir_name.'/').'">'.$shortName.' on '.$_SERVER['HTTP_HOST'].'</a>') ?>" />
 		</span><br />				

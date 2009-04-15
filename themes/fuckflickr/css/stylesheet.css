@@ -169,30 +169,35 @@ h3#description {
 .item {
   float: left;
   width: 300px;  /* default, gets overridden */
-  height: 225px; /* default, gets overridden */
+  /*height: 225px;*/ /* default, gets overridden */
+  height: 300px;
   margin-right: 10px;
   padding-bottom: 10px;
   overflow: hidden;
   text-align: left;
 }
 
+input.embed-code { background-color: #eee; color: #777; border: 1px solid #999; padding: 2px; }
+
+
 
 /* specific filetypes */
 
 /* images */
-.image { height: 300px; }
+/*.image { height: 300px; }*/
 .image .thumb { text-align: center; background-color: black; }
 .image .thumb img { height: 240px; overflow: hidden; }
 
 /* audio */
-.audio { height: 100px; background-color: #eee; }
+/*.audio { height: 100px; background-color: #eee; }*/
+.audio-inline { height: 240px; }
 
 /* videos */
-.video { width: 500px; height: 440px; }
-.video-wrapper { width: 500px; height: 390px; }
-.video .meta { background: black; color: white; padding: 5px 8px; }
-.video .meta a { color: white; }
-.video input.embed-code { background-color: #eee; color: #777; border: 1px solid #999; padding: 2px; }
+/*.video { width: 500px; height: 440px; }
+.video-wrapper { width: 500px; height: 390px; }*/
+.video-wrapper { height: 240px; } /* same as image */
+/*.video .meta { background: black; color: white; padding: 5px 8px; }
+.video .meta a { color: white; }*/
 
 
 /* ..... */
