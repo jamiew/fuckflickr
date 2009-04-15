@@ -18,15 +18,10 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 		foreach($this->ff_items as $item):
 
 			$item = str_replace('//','/',$item); // bug in RSS feed collection, FIXME
-			print "item = $item".nl;
 			$filename = basename($item);			
-			print "filename = $filename".nl;
 			$dirname = cleanDirname($item);
-			print "dirname = $dirname".nl;
 			$raw_dir = dirname(cleanDirname($item)).'/';
-			print "raw_dir = $raw_dir".nl;
 			$dir = str_replace(FF_DATA_DIR, '', $raw_dir); // w/o the /data/
-			print "dir = $dir".nl;
 			$itemURL = $this->urlFor('anchor', $filename, $dir); /* nasty, should fix anchor urlFor... */
 
 ?>
@@ -34,7 +29,7 @@ print "<?xml version=\"1.0\"?>\n"; // php tries to interpret as an open tag
 			<guid><?php print $itemURL; ?></guid>
 			<link><?php print $itemURL ?></link>
 			<title><?php print $filename; ?></title>
-			<pubDate><?php print time(); // FIME ?></pubDate>
+			<pubDate><?php print date(DATE_RFC822, filemtime($item)); // FIME ?></pubDate>
 <?php /*
 				<enclosure type="video/quicktime" url="http://www.rocketboom.com/video/rb_08_mar_28.mov" length="25512412" />
 				<media:content isDefault="true" type="video/quicktime" url="http://www.rocketboom.com/video/rb_08_mar_28.mov" fileSize="25512412" /><media:rating>nonadult</media:rating> 
