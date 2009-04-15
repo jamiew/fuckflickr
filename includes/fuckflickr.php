@@ -22,9 +22,8 @@ class fuckflickr extends imageResize {
 		// figure out what's going on
 		$this->dir_root = $this->findURL() .'/';
 		$this->dir_incl = $this->dir_root .'includes/';
-		// $this->dir_fs_tmpl = FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
-		$this->dir_fs_tmpl = FF_TEMPLATE_DIR;
-		$this->dir_tmpl = $this->dir_root . FF_TEMPLATE_DIR;
+		$this->dir_fs_tmpl = FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
+		$this->dir_tmpl = $this->dir_root . FF_TEMPLATE_DIR . FF_USE_TEMPLATE;
 		$this->sortDir = true;
 		$this->ff_total = 0;
 		$this->dir_date = 0;
@@ -380,7 +379,7 @@ class fuckflickr extends imageResize {
 			if (is_file($this->dir_fs_tmpl . $file)) {
 				include($this->dir_fs_tmpl . $file);
 			} else {
-				echo('you ain\'t  got a page to tag, toy. set your page properly for '. $this->dir_tmpl . $file);
+				echo('you ain\'t  got a page to tag, toy. set your page properly for '. $this->dir_fs_tmpl . $file);
 			}
 		} else {
 			echo('you need a place to hang your shit. add a fuckflickr template.');

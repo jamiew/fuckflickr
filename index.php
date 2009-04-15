@@ -27,7 +27,7 @@ define('FF_DIR_INFO_FILENAME', 'info.yml');
 define('FF_IMG_QUALITY', ($IMAGE_QUALITY > 0 && $IMAGE_QUALITY <= 5) ? $IMAGE_QUALITY : 3);
 define('FF_PER_PAGE', (is_numeric($IMAGES_PER_PAGE) && $IMAGES_PER_PAGE > 0) ? floor($IMAGES_PER_PAGE) : 0);
 define('FF_RSS_ITEM_COUNT', 15);
-// define('FF_USE_TEMPLATE', (!empty($THEME)) ? $THEME . ((substr($THEME, -1, 1) != '/') ? '/' : '') : 'fuckflickr/');
+define('FF_USE_TEMPLATE', (!empty($THEME)) ? $THEME . ((substr($THEME, -1, 1) != '/') ? '/' : '') : 'fuckflickr');
 define('FF_UES_TEMPLATE','');
 define('FF_CACHING_ENABLED', $CACHING_ENABLED);
 

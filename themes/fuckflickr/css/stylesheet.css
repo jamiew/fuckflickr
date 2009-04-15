@@ -14,33 +14,24 @@ body {
   font-family: Geneva, Arial, sans-serif;
 }
 
-a {
-  color: blue;
-}
-a:hover {
-  background-color: #ff0085;
-  color: white;
-} 
-a:focus{
-  -moz-outline:none; 
-  outline:none;
-}
+a       { color: blue; }
+a:hover { background-color: #ff0085; color: white; } 
+a:focus { -moz-outline:none; outline:none; }
 
-input,form{
-  font-size:9px;
-}
+input,form { font-size:9px; }
 
 p, h1, h2, h3, h4, h5 { 
   margin: 0; 
   padding: 2px 0; 
 }
 
+
 .clear { clear: both; }
 
 
 /******* layout *********/
 #container {
-  min-width: 980px; /* 3 items wide; TODO doesn't work in IE */
+  min-width: 980px; /* ~3 items wide; TODO doesn't work in IE */
 }
 
 #header {
@@ -171,6 +162,7 @@ p, h1, h2, h3, h4, h5 {
   overflow: hidden;
   text-align: left;
 }
+
 
 /* specific filetypes */
 

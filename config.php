@@ -24,7 +24,9 @@ $FILETYPES = array(
 	'audio'	=> array('aiff','wav','mp3', 'ogg', 'flac'),
 	'document' => array('txt','rtf','pdf','doc','ppt','xls') // TODO
 	);
-
+	
+// which theme would you like to use? located inside the 'themes' directory
+$THEME = 'fuckflickr';
 
 // we're not going to make you but we like cc licenses vs hardcore copywrite 
 $CC_LICENSE = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 License</a>';
@@ -72,7 +74,7 @@ $CACHING_ENABLED = true;
 define(FF_DATA_DIR, 'data/');
 define(FF_DATA_THUMB_DIR, 'thumb/');
 define(FF_DATA_WEB_DIR, 'web/');
-define(FF_TEMPLATE_DIR, 'theme/');
+define(FF_TEMPLATE_DIR, "themes/");
 
 // output helpers TODO MOVEME
 define(nl, "\n");
