@@ -1,2 +1,4 @@
 config.php
-cache
+cache/*
+data/*
+.DS_store
