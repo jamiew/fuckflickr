@@ -132,7 +132,7 @@ foreach($items as $item):
 	$index++;	// ghetto pre-incremenet so we start at 1
 ?>
 	<li class="item <?php print $type ?>" id="item_<?php print $index ?>">
-		<a name="<?php echo str_replace('#','',$anchor) ?>" class="anchor"></a>
+		<?php if(!$soundmanager): ?><a name="<?php echo str_replace('#','',$anchor) ?>" class="anchor"></a><?php endif; ?>
 		
 		<!-- content -->
 		<?php

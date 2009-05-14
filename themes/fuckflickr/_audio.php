@@ -23,7 +23,7 @@ HEREDOC;
 	}
 	else {		
 		// Not an MP3? just use <embed>		
-		$embed = '<embed src="'.$file.'" autostart="true" width="200" height="60" loop="1" />';
+		$embed = '<embed src="'.$file.'" autostart="false" width="200" height="60" loop="1" />';
 	}
 ?>
 
@@ -39,7 +39,7 @@ HEREDOC;
 			<div class="meta">
 		  	  <a href="#">#</a>
 	  		  <a href="#">audio</a>
-   	 		  embed: <input type="text" class="embed-code" value="<?php //print str_replace("\n", '', $embed) ?>" />
+   	 		  embed: <input type="text" class="embed-code" value="<?php print htmlentities(str_replace("\n", '', $embed)); ?>" />
 			</div>
 		</div>
 	</div>

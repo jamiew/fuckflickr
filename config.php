@@ -21,7 +21,7 @@ $CLEAN_URLS = true;
 $FILETYPES = array(
 	'image' => array('jpg','jpeg','gif','png','tiff','tga'),
 	'video' => array('avi','xvid','mov','m4v','mp4','mpg','mpeg'),
-	'audio'	=> array('aiff','wav','mp3', 'ogg', 'flac'),
+	'audio'	=> array('aif','aiff','wav','mp3', 'ogg', 'flac','mid','midi'),
 	'document' => array('txt','rtf','pdf','doc','ppt','xls') // TODO
 	);
 	
