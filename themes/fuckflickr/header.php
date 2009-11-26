@@ -26,14 +26,16 @@ $begintime = $time;
 
 	<link href="<?php echo $this->dir_tmpl ?>css/stylesheet.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
 	<link href="<?php echo $this->dir_tmpl ?>css/thickbox.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
+	<link href="<?php echo $this->dir_tmpl ?>css/galleria.css" rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
 	<!--[if lt IE 7]><style type="text/css">.preview a { border-color: #000000; }</style><![endif]-->
 	
   <script type="text/javascript" charset="utf-8">var tb_pathToImage = "<?php echo $this->dir_tmpl ?>images/loading.gif";</script>
-	<script src="<?php echo $this->dir_tmpl ?>js/jquery.js" type="text/javascript" charset="utf-8"></script>
-	<script src="<?php echo $this->dir_tmpl ?>js/jquery.thickbox.js" type="text/javascript" charset="utf-8"></script>
-	<script src="<?php echo $this->dir_tmpl ?>js/jquery.preload-min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="<?php echo $this->dir_tmpl ?>js/flashembed.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="<?php echo $this->dir_tmpl ?>js/application.js" type="text/javascript" charset="utf-8"></script>
+	<script src="<?php echo $this->dir_tmpl ?>js/jquery.js" type="text/javascript" charset="utf-8"></script> <!-- our poison of choice -->
+	<script src="<?php echo $this->dir_tmpl ?>js/jquery.thickbox.js" type="text/javascript" charset="utf-8"></script> <!-- lightbox display -->
+	<script src="<?php echo $this->dir_tmpl ?>js/jquery.preload-min.js" type="text/javascript" charset="utf-8"></script> <!-- image eagerloading -->
+	<script src="<?php echo $this->dir_tmpl ?>js/jquery.galleria.js" type="text/javascript" charset="utf-8"></script> <!-- slideshow mode -->
+	<script src="<?php echo $this->dir_tmpl ?>js/flashembed.min.js" type="text/javascript" charset="utf-8"></script> <!-- flowplayer for video -->
+	<script src="<?php echo $this->dir_tmpl ?>js/application.js" type="text/javascript" charset="utf-8"></script> <!-- FuckFlickr-specific -->
 </head>
 <body>
 <div id="container">
@@ -51,6 +53,11 @@ $begintime = $time;
 				<option value="<?php echo $this->urlFor('dir', $this->dir, '', '', 'sort') ?>"<?php if (array_key_exists('sort', $this->reqs) && $this->reqs['sort'] == 'date') echo ' selected' ?>>Recently Added</option>
 				<option value="<?php echo $this->urlFor('dir', $this->dir, '', 'sort=name', 'sort') ?>"<?php if (array_key_exists('sort', $this->reqs) && $this->reqs['sort'] == 'name') echo ' selected' ?>>Name</option>
 			</select><noscript><input type="submit" value="Sort" /></noscript></form>
+
+			<p>
+				<input type="button" id="start_slideshow" name="start_slideshow" value="Start Slideshow" /><br />			
+			</p>
+
 		</div> <!-- /#settings -->
 		
 		<!-- humping graphic -->

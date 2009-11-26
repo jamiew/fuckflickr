@@ -1,4 +1,4 @@
 config.php
 cache/*
 data/*
-.DS_store
+.DS_Store

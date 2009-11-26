@@ -44,13 +44,17 @@ class fuckflickr extends imageResize {
 	* TODO FIXME don't really need these anymore
 	*/
 	function viewList($file = 'list.php') {
+		error_log("viewList...");
 		$this->readDir(); // read this dir
+		error_log("process...");
 		$this->processImages(); // parse imgz
+		error_log("evalDirInfo...");		
 		if ($this->dir != FF_DATA_DIR) $this->evalDirInfo($this->dir_name, $this->dir);
 		for ($i=0; $i<sizeof($this->ff_dirs); $i++) {
 		  debug('dir: '. $this->ff_dirs[$i].'<br />'.$this->dir . $this->ff_dirs[$i] .'<br /><br />');
 		  $this->readDirInfo($this->ff_dirs[$i], $this->dir . $this->ff_dirs[$i]);
 	  }
+		error_log("openTemplate...");
 		$this->openTemplate($file);
 	}
 
@@ -95,7 +99,7 @@ class fuckflickr extends imageResize {
 
 		//$this->debug = (isset($this->reqs['d']));
 		//$this->debug = true;
-		debug('<strong>Entering debug mode.</strong>');
+		debug('<strong>Debug mode enabled!</strong>');
 
 		$this->dir_name = $this->makeDirName($this->dir);
 		$this->dir_origs = $this->dir;
@@ -105,7 +109,7 @@ class fuckflickr extends imageResize {
 		$this->cur_page = ((is_numeric($this->reqs['page']) && $this->reqs['page'] > 0 || $this->reqs['page'] == 'all') ? floor($this->reqs['page']) : 1);
 		$this->sortByDate = ($this->reqs['sort'] == 'name') ? false : true; // sort by the date uploaded, otherwise sort by filename (if sorting is enabled)
 		$this->exclude = array('.', '..', $this->dir_origs, $this->web_dir, $this->thumb_dir, 'web', 'thumb', '.svn', '.git', '.DS_Store', 'info.yml');
-		$this->exclude = array_merge($this->exclude, split(',', FF_EXCLUDE_DIRS)); // Combine with config'd excludes
+		$this->exclude = array_merge($this->exclude, preg_split('/\,/', FF_EXCLUDE_DIRS)); // Combine with config'd excludes
 	}
 	
 	// get the dir name
@@ -209,7 +213,8 @@ class fuckflickr extends imageResize {
 		if (empty($dirname)) $dirname = $this->dir;
 		$rdir = @dir($dirname);
 		if ($rdir) {
-			debug('reading directory '. $this->dir);
+
+			debug("Reading directory '$this->dir' ...");
 
 			while ($rfile = $rdir->read()) {
 				

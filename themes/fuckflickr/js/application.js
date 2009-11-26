@@ -122,6 +122,35 @@ function eraseCookie(name) {
 }
 
 
+/*
+* Slideshow mode, via jQuery Supersized plugin by Sam Dunn
+* http://www.buildinternet.com/project/supersized/
+*/
+
+// Slideshow
+$(function(){
+  
+  // Bind to the #start_slideshow link/button
+  $('#start_slideshow').click(function(){
+    console.log("ACTIVATE SLIDESHOW...");
+    
+    // Active Galleria mode...
+    $('ul#items').galleria();
+    
+    // Hide the FuckFlickr UI
+    $('#header, #navigation, #footer, .info').remove();
+    $('body').css('background-color', '#000000');
+    
+      
+    // Set a 'Next' timer -- currently 3 seconds
+    setInterval( function(){ $.galleria.next(); }, 3000 );
+    
+    return false;
+  });
+});
+
+
+
 
 
 

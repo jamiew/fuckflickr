@@ -70,7 +70,7 @@ if( isset($fuckflickr->reqs['photo']) && !empty($fuckflickr->reqs['photo']) ) {
 	$fuckflickr->viewPhoto();
 } elseif( !empty($fuckflickr->reqs['rss']) ) { /* FIXME will allow for any /rss URL, which doesn't really work */
 	$fuckflickr->viewRSS();
-} else { // index page is default action; also, dir will = 
+} else { // index page is default action
 	$fuckflickr->viewList();
 }
 		

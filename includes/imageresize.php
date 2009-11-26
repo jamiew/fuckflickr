@@ -13,7 +13,7 @@
 class imageResize {
 	function resizeImage($file, $dest, $newWidth, $newHeight, $quality, $bResizeOnWidth){
 		if (!file_exists($file)) {
-			if ($this->debug) echo 'source does not exist!'. FF_BR;
+			if ($this->debug) debug("Original file '$file' does not exist!");
 			return false;
 		}
 
@@ -21,7 +21,7 @@ class imageResize {
 		$h = 0;
 		$src = false;
 
-		// Create an Image from it so we can do the resize
+		// Create an Image from it so we can do the resize		
 		$info = getimagesize($file);
     $width = $info[0]; $height = $info[1]; $type = $info[2]; $bits = $info['bits'];
 
@@ -36,7 +36,7 @@ class imageResize {
       if ($fp) {
         $gifb = new GIFDecoder($fp);
       } elseif ($this->debug) {
-        echo 'could not read animated file'. FF_BR;
+        debug('Could not read animated GIF image');
       }
     }
 
@@ -61,13 +61,13 @@ class imageResize {
       return (is_file($dest));
     } else { // Do normal resize, whatever that is...
   		switch ($type) {
-  			case '2': $src = @imagecreatefromjpeg($file); break;
-  			case '3': $src = @imagecreatefrompng($file); break;
-  			case '1': $src = @imagecreatefromgif($file); break;
+  			case '2': $src = imagecreatefromjpeg($file); break;
+  			case '3': $src = imagecreatefrompng($file); break;
+  			case '1': $src = imagecreatefromgif($file); break;
   		}
 
   		if (!$src) {
-        if ($this->debug) echo 'problem opening '. $file .' - check it is complete'. FF_BR;
+        if ($this->debug) debug("Error opening '$file' - bad upload?");
   			return false;
   		}
 
@@ -81,32 +81,34 @@ class imageResize {
   			$w = round($ratio * $h);
   		}
 
-  		if ($tmp = imagecreatetruecolor($w,$h)) {
+  		if($tmp = imagecreatetruecolor($w,$h)) {
   			// FROM Author: Tim Eckel - Date: 09/07/07 - Version: 1.1 - Project: FreeRingers.net - Freely distributable
-  			if (FF_IMG_QUALITY < 5 && (($w * FF_IMG_QUALITY) < $width || ($h * FF_IMG_QUALITY) < $height)) {
-  			  if ($tmp2 = imagecreatetruecolor (($w * FF_IMG_QUALITY + 1), ($h * FF_IMG_QUALITY + 1))) {
-  					imagecopyresized ($tmp2, $src, 0, 0, 0, 0, ($w * FF_IMG_QUALITY + 1), ($h * FF_IMG_QUALITY + 1), $width, $height);
-  					imagecopyresampled ($tmp, $tmp2, 0, 0, 0, 0, $w, $h, ($w * FF_IMG_QUALITY), ($h * FF_IMG_QUALITY));
-  					imagedestroy ($tmp2);
+  			if(FF_IMG_QUALITY < 5 && (($w * FF_IMG_QUALITY) < $width || ($h * FF_IMG_QUALITY) < $height)) {
+  			  if($tmp2 = imagecreatetruecolor(($w * FF_IMG_QUALITY + 1), ($h * FF_IMG_QUALITY + 1))) {
+  					imagecopyresized($tmp2, $src, 0, 0, 0, 0, ($w * FF_IMG_QUALITY + 1), ($h * FF_IMG_QUALITY + 1), $width, $height);
+  					imagecopyresampled($tmp, $tmp2, 0, 0, 0, 0, $w, $h, ($w * FF_IMG_QUALITY), ($h * FF_IMG_QUALITY));
+  					imagedestroy($tmp2);
   				} elseif ($this->debug) {
-  					echo 'could not create temp image for faster resize'. FF_BR;
+  					debug('Could not create temp image for faster resize');
   					return false;
   				}
   			} else {
-  			  imagecopyresampled ($tmp, $src, 0, 0, 0, 0, $w, $h, $width, $height);
+  			  imagecopyresampled($tmp, $src, 0, 0, 0, 0, $w, $h, $width, $height);
   			}
 
+				// These were previously "@" silenced, but that causes major major problems when a user is missing the GD lib
+				// leaving them on doesn't really seem to cause many issues except possibly debuggery on 1st pageload -- acceptable
   			switch ($type) {
-  				case '2': @imagejpeg($tmp, $dest, $quality); break;
-  				case '3': @imagepng($tmp, $dest, (9-round($quality/9))); break; // quality is 0-9, with 0 being the best. convert from jpeg 100 scale.
-  				case '1': @imagegif($tmp, $dest); break; // gif has no quality
+  				case '2': imagejpeg($tmp, $dest, $quality); break;
+  				case '3': imagepng($tmp, $dest, (9-round($quality/9))); break; // quality is 0-9, with 0 being the best. convert from jpeg 100 scale.
+  				case '1': imagegif($tmp, $dest); break; // gif has no quality
   			}
   			imagedestroy($src);
   			imagedestroy($tmp);
 
   			return (is_file($dest)); // return true if file was created successfully
-  		} elseif ($this->debug) {
-  			echo 'could not create temp image for resize'. FF_BR;
+  		} elseif($this->debug) {
+  			debug('could not create temp image for resize');
   		}
 
   		return false;
@@ -114,6 +116,8 @@ class imageResize {
 	}
 }
 
+
+// An external library for sexily resizing animated GIFs!
 // GIFDecoder Version 2.0 by László Zsidi, http://gifs.hu 
 Class GIFDecoder {
   var $GIF_buffer = Array(); var $GIF_arrays = Array(); var $GIF_delays = Array(); var $GIF_stream = ''; var $GIF_string = ''; var $GIF_bfseek =  0; var $GIF_screen = Array(); var $GIF_global = Array(); var $GIF_sorted; var $GIF_colorS; var $GIF_colorC; var $GIF_colorF;
@@ -218,6 +222,7 @@ Class GIFDecoder {
   function GIFGetFrames ( ) {return ( $this->GIF_arrays );}
   function GIFGetDelays ( ) {return ( $this->GIF_delays );}
 }
+
 
 // GIFEncoder Version 2.0 by László Zsidi, http://gifs.hu
 Class GIFEncoder {
