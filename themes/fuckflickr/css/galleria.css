@@ -1,9 +1,40 @@
-.galleria{list-style:none;width:200px}
+
+/* From galleria */
 .galleria li{display:block;width:80px;height:80px;overflow:hidden;float:left;margin:0 10px 10px 0}
-.galleria li a{display:none}
-.galleria li div{position:absolute;display:none;top:0;left:180px}
+.galleria li a { display:none }
+.galleria li div { position:absolute;display:none;top:0; left:180px }
 .galleria li div img{cursor:pointer}
-.galleria li.active div img,.galleria li.active div{display:block}
+.galleria li.active div img,.galleria li.active div{ display: block; }
 .galleria li img.thumb{cursor:pointer;top:auto;left:auto;display:block;width:auto;height:auto}
 .galleria li .caption{display:block;padding-top:.5em}
 * html .galleria li div span{width:400px} /* MSIE bug */
+
+/* FFlickr hacks */
+.galleria_container {
+  width: 100% !important;
+
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Yo Theo -- customize below height for the installation -- not enough time to do JS detection of browser port + resize! */
+.galleria_container, .galleria_container img {
+  height: 620px;
+/*  max-width: 100%;*/
+}
+  
+
+/* list item of preview thumbnails... gonna hide these mofos */
+/* These would be dope if they scrolled as it progressed through the slideshow, like Windows filmstrip mode */
+ul.galleria {
+  list-style: none;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+}
+
+ul.galleria li { 
+  border: 1px solid #555;
+  float: left;
+  margin-top: 20px;
+}

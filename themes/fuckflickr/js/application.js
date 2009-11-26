@@ -123,73 +123,46 @@ function eraseCookie(name) {
 
 
 /*
-* Slideshow mode, via jQuery Supersized plugin by Sam Dunn
-* http://www.buildinternet.com/project/supersized/
+* Slideshow mode, via jQuery Galleria plugin
+* TODO: credits for said plugin! We love open source
 */
 
 // Slideshow
 $(function(){
   
-  // Bind to the #start_slideshow link/button
-  $('#start_slideshow').click(function(){
-    console.log("ACTIVATE SLIDESHOW...");
-    
-    // Active Galleria mode...
-    $('ul#items').galleria();
-    
-    // Hide the FuckFlickr UI
-    $('#header, #navigation, #footer, .info').remove();
-    $('body').css('background-color', '#000000');
-    
-      
-    // Set a 'Next' timer -- currently 3 seconds
-    setInterval( function(){ $.galleria.next(); }, 3000 );
-    
-    return false;
-  });
+  // Parse the URL for '#slideshow' to activate right away
+  console.log(window.location.href);  
+  if (/\#slideshow$/.test(window.location.href)) {
+    console.log("detected #slideshow in the URL!");
+    startSlideshow();  
+  }
+          
+  // Bind to the #start_slideshow button
+  $('#start_slideshow').click(function(){ startSlideshow(); });
 });
 
+function startSlideshow(){
+  console.log("ACTIVATE SLIDESHOW...");
+  
+  // Active Galleria's slideshow mode...
+  $('ul#items').galleria();
+  $.galleria.next();
+  
+  // Hide/destroy the FuckFlickr UI
+  $('#header, #navigation, #footer, a.anchor, h2, .info').remove();
+  $('body').css('background-color', '#000000');  
+    
+  // Nasty hack to laod the first one -- galleria having trouble with our HTML
+  // 200 or 500 ms timeout doesn't work... trying a full second. Not ideal. -_-
+  setTimeout( function(){ $('img.thumb:first').click(); }, 1000 );
+  
+  // Set a 'Next' timer -- currently 3 seconds
+  var slideshowSpeed = 3000;
+  var timer = setInterval( 
+    function(){ $.galleria.next(); }, 
+    slideshowSpeed );
+}
 
 
 
 
-
-
-/* FLOWRPLAYERIFICATION */
-/*
- flashembed("video_<?php print $index ?>", 
-	{
-		src:'<?php echo $this->dir_tmpl ?>/flowplayer/FlowPlayerDark.swf',
-		// width: <?php echo $this->video_width ?>, 
-		// height: <?php echo $this->video_height ?>,
-	},
-	
-	// second argument is Flowplayer specific configuration. See full list:
-	// http://flowplayer.org/player/configuration.html
-	{config: { 
-		videoFile: '<?php print $this->urlFor('web', $item) ?>.flv',
-		// videoLink: 'TODO',
-		
-		// playlist?
-	  // { playList: [
-	  //    { url: 'http://flowplayer.org/skiing.mp4' },
-	  //    { url: 'http://flowplayer.org/river.mp4' },
-	  //    { url: 'http://flowplayer/hacking.mp4' },
-	  //    { url: 'http://www.images.org/byebye.jpg' }
-	  //    ]
-	  // }			
-
-		autoPlay: false,
-		autoBuffering: true,
-		loop: false,
-		// initialScale: 'scale',
-		initialScale: 'fit',
-		controlBarBackgroundColor:'0x000000',
-
-		// minimalist vimeo-esque look
-		controlsOverVideo: 'ease',			
-		controlBarBackgroundColor: -1,
-		controlBarGloss: 'low',
-	}} 
-);
-*/

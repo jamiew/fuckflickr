@@ -117,14 +117,14 @@ $$ = $.fn.galleria = function($options) {
 			
 			// try to fetch an anchor
 			var _a = $(this).find('a').is('a') ? $(this).find('a') : false;
-			_a = $(_a[1]); // FuckFlickr hack
+			_a = $(_a[1]); // NOTE: FuckFlickr hack -- we have 4 anchors in block, we want the one that goes to /web/
 		  			
 			// reference the original image as a variable and hide it
       var _img = $(this).children('img').css('display','none');
 		  
 			// extract the original source
       var _src = _a ? _a.attr('href') : _img.attr('src');
-			console.log("src = "+_src);
+      // console.log("src = "+_src);
 			
 			// find a title
 			var _title = _a ? _a.attr('title') : _img.attr('title');
@@ -351,6 +351,11 @@ $.extend({galleria : {
 	current : '',
 	onImage : function(){ },
 	activate : function(_src) { 
+
+    // console.log('history = '+$.galleria.history);
+    // Hard-disabling history -- we don't need it for FuckFlickr
+    $.galleria.history = false;
+    
 		if ($.galleria.history) {
 			$.historyLoad(_src);
 		} else {
