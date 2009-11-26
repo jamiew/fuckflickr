@@ -25,6 +25,7 @@
 /* Yo Theo -- customize below height for the installation -- not enough time to do JS detection of browser port + resize! */
 .galleria_container, .galleria_container img {
   height: 620px;
+  max-width: 100%;
 }
 
 /* Hiding the filmstrip and padding the top a bit; comment out to see some intersetingness */
