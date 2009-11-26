@@ -17,16 +17,25 @@
   margin: 0 auto;
 }
 
+/* Add that logo snitches */
+.galleria_container {
+  background: black url(../images/fflickr_logo_PG_150px.gif) top left no-repeat;
+}
+
 /* Yo Theo -- customize below height for the installation -- not enough time to do JS detection of browser port + resize! */
 .galleria_container, .galleria_container img {
   height: 620px;
-/*  max-width: 100%;*/
 }
-  
 
+/* Hiding the filmstrip and padding the top a bit; comment out to see some intersetingness */
+.galleria_container { padding-top: 60px; }
+ul.galleria { display: none; }
+
+  
 /* list item of preview thumbnails... gonna hide these mofos */
 /* These would be dope if they scrolled as it progressed through the slideshow, like Windows filmstrip mode */
 ul.galleria {
+  
   list-style: none;
   width: 100%;
   height: 120px;
