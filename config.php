@@ -45,7 +45,7 @@ $IMAGES_PER_PAGE = 0;
 
 // any dirs you want to exclude from the index list? comma-separated (no spaces)
 // can still view them by typing in the URL manually, they just won't be advertised
-$EXCLUDE_DIRS = "secret,top_secret";
+$EXCLUDE_DIRS = "secret,top_secret,richoffofrap,.Trashes,.fseventd";
 
 
 // this is how many images fuckflickr resizes on one refresh
