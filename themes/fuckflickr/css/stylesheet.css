@@ -10,19 +10,19 @@
 
 /******** general *******/
 body {
-  font-size: 10px; 
+  font-size: 10px;
   font-family: Geneva, Arial, sans-serif;
 }
 
 a       { color: blue; }
-a:hover { background-color: #ff0085; color: white; } 
+a:hover { background-color: #ff0085; color: white; }
 a:focus { -moz-outline:none; outline:none; }
 
 input,form { font-size:9px; }
 
-p, h1, h2, h3, h4, h5 { 
-  margin: 0; 
-  padding: 2px 0; 
+p, h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 2px 0;
 }
 
 
@@ -129,16 +129,16 @@ p, h1, h2, h3, h4, h5 {
 }
 
 h1#title {
-  margin: 5px 0 3px 0; 
-  padding: 0; 
-  font-size: 24px; 
+  margin: 5px 0 3px 0;
+  padding: 0;
+  font-size: 24px;
   line-height: 27px;
 }
 h3#description {
-  font-size: 13px; 
-  margin: 5px 0 3px 0; 
-  padding: 0; 
-  line-height: 15px; 
+  font-size: 13px;
+  margin: 5px 0 3px 0;
+  padding: 0;
+  line-height: 15px;
   font-weight: normal;
 }
 
@@ -146,9 +146,13 @@ h3#description {
 
 
 /****** entry display *****/
+ul {
+  list-style-type: none;
+}
+
 #items {
   list-style: none;
-  clear: both; 
+  clear: both;
 /*  padding: 20px 0;*/
 }
 
@@ -160,9 +164,9 @@ h3#description {
 /* common across all items */
 .item-wrapper, .item {
 
-}  
+}
 .item-wrapper {
-  width: 300px; 
+  width: 300px;
   /*min-height: 260px;*/  /* FIXME does not work in IE6 (do we care?) */
 }
 
@@ -203,8 +207,8 @@ input.embed-code { background-color: #eee; color: #777; border: 1px solid #999; 
 /* ..... */
 .preview a { /* given a background-image dynamically */
   float: left;
-  position: relative; 
-  top: 0px; 
+  position: relative;
+  top: 0px;
   left: 0px;
   display: block;
   border: 5px solid transparent; /* pimped out on hover */
@@ -212,7 +216,7 @@ input.embed-code { background-color: #eee; color: #777; border: 1px solid #999; 
   height: 70px; /* 80px - 2*border */
   background-position: -5px -5px;
   overflow: hidden;
-  text-align: center; 
+  text-align: center;
   background-color: black;
   margin: 0 6px 5px 0;
   padding-top: 10px;
