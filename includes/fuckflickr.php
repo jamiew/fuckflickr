@@ -436,7 +436,7 @@ class fuckflickr extends imageResize {
 
 	// dynamically pick up where the application is installed
 	function findURL() {
-		return (($_SERVER["HTTPS"] == 'on') ? 'https' : 'http') .'://'. $_SERVER["SERVER_NAME"] . (($_SERVER["SERVER_PORT"] != '80') ? $_SERVER["SERVER_PORT"] : '') . dirname($_SERVER['PHP_SELF']);
+		return (($_SERVER["HTTPS"] == 'on') ? 'https' : 'http') .'://'. $_SERVER["SERVER_NAME"] . (($_SERVER["SERVER_PORT"] != '80') ? ':' . $_SERVER["SERVER_PORT"] : '') . dirname($_SERVER['PHP_SELF']);
 	}
 
 	// build args for clean or messy URLs
