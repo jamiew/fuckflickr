@@ -105,7 +105,7 @@ class fuckflickr extends imageResize {
 		$this->cur_page = ((is_numeric($this->reqs['page']) && $this->reqs['page'] > 0 || $this->reqs['page'] == 'all') ? floor($this->reqs['page']) : 1);
 		$this->sortByDate = ($this->reqs['sort'] == 'name') ? false : true; // sort by the date uploaded, otherwise sort by filename (if sorting is enabled)
 		$this->exclude = array('.', '..', $this->dir_origs, $this->web_dir, $this->thumb_dir, 'web', 'thumb', '.svn', '.git', '.DS_Store', 'info.yml');
-		$this->exclude = array_merge($this->exclude, split(',', FF_EXCLUDE_DIRS)); // Combine with config'd excludes
+		$this->exclude = array_merge($this->exclude, explode(',', FF_EXCLUDE_DIRS)); // Combine with config'd excludes
 	}
 	
 	// get the dir name
