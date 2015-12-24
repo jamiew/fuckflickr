@@ -18,7 +18,7 @@ class fuckflickr extends imageResize {
 	* constructor & dispatcher
 	*/
 	function fuckflickr() {
-	
+
 		// figure out what's going on
 		$this->dir_root = $this->findURL() .'/';
 		$this->dir_incl = $this->dir_root .'includes/';
@@ -28,8 +28,8 @@ class fuckflickr extends imageResize {
 		$this->ff_total = 0;
 		$this->dir_date = 0;
 		$this->timenow = time();
-		
-		
+
+
 		// some ish to move into config or something
 		$this->video_width = 600; // approx 16:9
 		$this->video_height = 400;
@@ -64,15 +64,15 @@ class fuckflickr extends imageResize {
 	* RSS: find all media in our install and render as an XML feed
 	*/
 	function viewRSS() {
-	  
+
     // build our own exclusion list; $this->exclude is too tight
     $patterns = array();
-    foreach($this->exclude as $f) 
+    foreach($this->exclude as $f)
       if( empty($f) || $f == '.' || $f == '..' || $f == $this->dir ) continue; // some stuff doesn't fly w/ `find`
       else $patterns[] = $f;
     $pattern = join('\|', $patterns);
     $files = explode("\n", shell_exec("find $this->dir -type f | grep -v -e '$pattern'")); // system call; less than ideal, but fast
-    
+
     // build file modified hash and sort
     $sort = array();
     foreach ($files as $path) {
@@ -84,7 +84,7 @@ class fuckflickr extends imageResize {
 		$this->ff_items = array_splice( array_keys($sort), 0, FF_RSS_ITEM_COUNT );
 		include('rss.php');
 	}
-	  
+
 
 	/*
 	*	parse the request URI and/or POST/GET vars
@@ -101,29 +101,29 @@ class fuckflickr extends imageResize {
 		$this->dir_origs = $this->dir;
 		$this->dir_thumbs = $this->dir.FF_DATA_THUMB_DIR;
 		$this->dir_web = $this->dir.FF_DATA_WEB_DIR;
-		
+
 		$this->cur_page = ((is_numeric($this->reqs['page']) && $this->reqs['page'] > 0 || $this->reqs['page'] == 'all') ? floor($this->reqs['page']) : 1);
 		$this->sortByDate = ($this->reqs['sort'] == 'name') ? false : true; // sort by the date uploaded, otherwise sort by filename (if sorting is enabled)
 		$this->exclude = array('.', '..', $this->dir_origs, $this->web_dir, $this->thumb_dir, 'web', 'thumb', '.svn', '.git', '.DS_Store', 'info.yml');
 		$this->exclude = array_merge($this->exclude, explode(',', FF_EXCLUDE_DIRS)); // Combine with config'd excludes
 	}
-	
+
 	// get the dir name
 	function makeDirName($dir) {
 	  $a = explode('/', $dir);
 	  while (empty($b)) $b = array_pop($a);
 		return $b;
 	}
-	
+
 	/*
 	* process request into dispatchable information
 	* look at URL, cookies, config, env vars, etc. and decide where to go
 	*/
 	function parseRequest() {
-		
+
 		// seed cookie values first -- TODO don't hard-code keys!
 		if(!empty($_COOKIE['fuckflickr_sort'])) $this->reqs['sort'] = $_COOKIE['fuckflickr_sort'];
-		
+
 		// then parse URL
 		if (FF_CLEAN_URLS && empty($_REQUEST['dir'])) { // bail on dir queryvar, for dual-compatibility
 			$path = urldecode(str_replace(dirname($_SERVER['PHP_SELF']), '', $_SERVER['REQUEST_URI']));
@@ -146,8 +146,8 @@ class fuckflickr extends imageResize {
           }
         }
 
-        for ($i=0; $i<sizeof($reqs); $i+=2) 
-					if (!empty($reqs[$i])) 
+        for ($i=0; $i<sizeof($reqs); $i+=2)
+					if (!empty($reqs[$i]))
 						$this->reqs[$reqs[$i]] = (isset($reqs[$i+1])) ? $reqs[$i+1] : true; // at least make true if set (ex. /d for debugging)
 				  unset($paths, $reqs);
 			}
@@ -170,7 +170,7 @@ class fuckflickr extends imageResize {
 				}
 			}
 		}
-		
+
 		// set it and move on
 		$this->dir = $dir . ((preg_match('/\/$/', $dir)) ? '' : '/'); // add trailing slash if necessary
 	}
@@ -186,7 +186,7 @@ class fuckflickr extends imageResize {
 			echo('you entered a cheating url or your folder contains shady characters - change \'em out!');
 			exit;
 		}
-	
+
 		// don't allow *anything* w/ a dot
 		$testDir = explode('data', $this->dir);
 		if (strstr($testDir[1],'.')) {
@@ -197,8 +197,8 @@ class fuckflickr extends imageResize {
 		// make sure dir has trailing slash
 		if (substr($this->dir, -1) != '/') $this->dir .= '/';
 	}
-	
-	
+
+
 
 
 	/*
@@ -212,7 +212,7 @@ class fuckflickr extends imageResize {
 			debug('reading directory '. $this->dir);
 
 			while ($rfile = $rdir->read()) {
-				
+
 				// skip files and dirs we've explicitly excluded
 				// TODO: on init we should add 'thumb' and 'web' to $this->exclude
 				if (in_array($rfile, $this->exclude) || substr($rfile, -5) == 'thumb' || substr($rfile, -3) == 'web') continue; // FUCK THAT DIR
@@ -227,7 +227,7 @@ class fuckflickr extends imageResize {
 				$extension = getFileExtension($rfile);
 				$supported = getSupportedExtensions();
 				if (in_array($extension, $supported)) {
-					// Grab as array to sort either by name or date 
+					// Grab as array to sort either by name or date
 					$date = filemtime($this->dir . $rfile);
 					$this->ff_files[] = array($rfile, $date);
 					if ($date > $this->dir_date) $this->dir_date = $date;
@@ -256,7 +256,7 @@ class fuckflickr extends imageResize {
 
 	/*
 	*	resize all unresized images
-	*/	
+	*/
 	function processImages() {
 		if ($this->dir != 'data' && sizeof($this->ff_items) > 0){
 			// check if directory is writable [halvfet]
@@ -276,7 +276,7 @@ class fuckflickr extends imageResize {
 				debug('making web directory');
 				mkdir($this->dir_web, 0777);
 			}
-	
+
 			$this->resize_count = 0;
 			// lets make thumbnails
 			foreach($this->ff_items as $item) {
@@ -286,7 +286,7 @@ class fuckflickr extends imageResize {
 					// TODO: this is where we need to treat images, music, and video differently...
 					$type = getFileType($item);
 					if($type == 'image') {
-					
+
 						// if failed the first time (web), it should fail the second time (thumb). [halvfet]
 						debug('making web image for '. $item);
 						if ($this->resizeImage($this->dir . $item, $this->dir_web . $item, 600, 450, 93, 1)) {
@@ -303,11 +303,11 @@ class fuckflickr extends imageResize {
 						$this->resize_count++;
 					}
 					elseif( $type == 'video' ) {
-						
+
 						$thumbnail_at = 4;
 						$file = $this->dir.$item;
 						$ffmpeg = "ffmpeg"; // pray that its in the PATH; todo detect if this is valid, e.g. by exec'ing and checking for any output at all
-						
+
 						$thumbnail = $this->dir_thumbs.$item.".jpg";
 						if(!file_exists($thumbnail)) {
 							debug("Video: making thumbnail...");
@@ -316,10 +316,10 @@ class fuckflickr extends imageResize {
 							debug($cmd);
 							// exec($cmd); //or print("ERROR: COULD NOT GENERATE THUMBNAIL FOR $file".br);
 							proc_close(proc_open ($cmd, array(), $foo));
-							
-							// if there's no dir_thumb, make something							
+
+							// if there's no dir_thumb, make something
 							// FIXME TODO
-							
+
 						}
 
 						// debug("sending background task to transcode the video...");
@@ -331,13 +331,13 @@ class fuckflickr extends imageResize {
 							// exec($cmd); //or print("ERROR: COULD NOT TRANSCODE $file".br);
 							proc_close(proc_open ($cmd, array(), $foo));
 						}
-					}					
+					}
 					elseif( $type == 'audio' ) {
 						debug("AUDIO: maybe go find some album art");
-						
+
 					}
-					
-					
+
+
 				}//if file exists
 			}//iterate over all files
 
@@ -355,7 +355,7 @@ class fuckflickr extends imageResize {
 				debug("item = $item[0]  type = $type");
 				$resizeFrom = ($type == 'video' ? $this->dir_thumbs.$item[0].".jpg" : $this->dir_web.$item[0]);
 				debug("resizeFrom = $resizeFrom");
-				
+
 				if( $this->resizeImage($resizeFrom, $this->dir_thumbs.FF_INDEX_THUMB_NAME, 120, 90, 93, 0) ) {
 				  // DO WE REALLY NEED THIS?
 					//$pf = dirname(dirname(dirname($this->dir_thumbs . FF_INDEX_THUMB_NAME)));
@@ -365,9 +365,9 @@ class fuckflickr extends imageResize {
 					echo('<strong>FAILED</strong> making index thumbnail image for '. $this->dir);
 				}
 			}
-		}		
+		}
 	}
-	
+
 	/*
 	* start rendering out, including header/footer as available
 	* TODO: possibly allow rendering w/o a template, for non-standard output like AJAX/RSS/etc
@@ -387,16 +387,16 @@ class fuckflickr extends imageResize {
 
 		if (is_file($this->dir_fs_tmpl .'footer.php') && FF_USE_TEMPLATE) include($this->dir_fs_tmpl .'footer.php');
 	}
-	
 
-	
+
+
 	/*
 	* generate URLs for internal routes
 	* clean or messy, as you like it
 	* TODO untested w/ messy URLs with new halvfet code
 	*/
 	function urlFor($type, $what, $dir='', $etc='', $excl=false) {
-		
+
 		// use whatever dir we're in if we aren't passed a root dir
 		// currently for images only, throwing other ish off
 		if(empty($dir) && ($type == 'original' || $type == 'web' || $type == 'thumb')) $dir = $this->dir;
@@ -430,8 +430,8 @@ class fuckflickr extends imageResize {
 				echo('ERROR: bad url type \''. $type .'\' requested');
 				return 'do-not-comprehenend-homey';
 				break;
-		}	
-	}	
+		}
+	}
 
 
 	// dynamically pick up where the application is installed
@@ -486,7 +486,7 @@ class fuckflickr extends imageResize {
 	function pageTitle() {
 		echo FF_NAME.' '.(($this->dir != FF_DATA_DIR) ? FF_SEPARATOR.str_replace( array('data/', '/', '-', '_'), array('', '/', ' ', ' '), cleanDirname($this->dir)) : (defined('FF_ANTI_FLICKR_MSG') ? FF_SEPARATOR.FF_ANTI_FLICKR_MSG : ''));
 	}
-	
+
 	// shortcut for pagination links inside the theme
 	// can rewrite for your own theme
 	function pagination() {
@@ -507,18 +507,18 @@ class fuckflickr extends imageResize {
 
 		$total = ceil($num/FF_PER_PAGE);
 		if ($this->cur_page > $total) $this->cur_page = $total;
-		
+
 		for($i=1; $i<=$total; $i++)
 			$pages .= ' &nbsp; '. (($i == $this->cur_page) ? '<strong>&lt;'. $i .'&gt;</strong>' : '<a href="'. $this->urlFor('page', $what, '', 'page='.$i) .'">'. $i .'</a>');
-		
+
 		if ($total > 1) $pages .= ' &nbsp; '. (($this->cur_page == 'all') ? '<strong>&lt;all&gt;</strong>' : '<a href="'. $this->urlFor('page', $what, '', 'page=all') .'">all</a>');
 		return $pages;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/*
 	* YAML "database" functions
 	* TODO: put into another file
@@ -557,8 +557,8 @@ class fuckflickr extends imageResize {
 			echo('could not create or read dir file');
 		}
 	}
-	
-	
+
+
 	/*
 	* save a YAML dir info file
 	*/
@@ -572,7 +572,7 @@ class fuckflickr extends imageResize {
 		$content = 'directory:'. nl . FF_SPACES .'title:'. ((isset($info['directory']['title'])) ? $info['directory']['title'] : (($title) ? $title : preg_replace('/\/$/', '', $name))) . nl . FF_SPACES .'desc:'. $info['directory']['desc'] . nl .'images:'. nl;
 
 		// go through each image
-		foreach ($this->ff_items as $v) 
+		foreach ($this->ff_items as $v)
 			$content .= FF_SPACES . $v .':'. nl . str_repeat(FF_SPACES, 2) . 'title:'. (isset($info['images'][$v]['title']) ? $info['images'][$v]['title'] : '') . nl . str_repeat(FF_SPACES, 2) . 'desc:'. (isset($info['images'][$v]['desc']) ? $info['images'][$v]['desc'] : '') . nl . str_repeat(FF_SPACES, 2) . 'tags:'. (isset($info['images'][$v]['tags']) ? $info['images'][$v]['tags'] : '') .nl;
 
 		// open directory info yaml
@@ -617,12 +617,12 @@ class fuckflickr extends imageResize {
 			} elseif ($c == $s) {
 				array_pop($p); // make room for another child!
 			}
-	
+
 			$p[] = $t; // add current child to pointer array
 			$s = $c; // set new level count
 			$ps = ''; // pointer string
 			foreach ($p as $pv) $ps .= '[\''. addslashes($pv) .'\']';
-			eval('$r'. $ps .' = '. ((!empty($d)) ? '\''. str_replace('\'', '\\\'', $d) .'\'' : '\'\'') .';'); // best way to write out multi-dimensional array		
+			eval('$r'. $ps .' = '. ((!empty($d)) ? '\''. str_replace('\'', '\\\'', $d) .'\'' : '\'\'') .';'); // best way to write out multi-dimensional array
 		}
 
 		// debug('done.');
@@ -643,7 +643,7 @@ class fuckflickr extends imageResize {
 // TODO support for the passed or default $logfile ...
 function debug($string, $logfile = '') {
 	// print "<span class=\"debug\">$string</span>".br;
-	error_log( strip_html($string) ); 
+	error_log( strip_html($string) );
 }
 
 function strip_html($string) {
@@ -672,14 +672,14 @@ function getSupportedExtensions() {
 	$arrays = array_values($FILETYPES);
 	$extensions = array();
 	foreach($arrays as $array) // FIXME gotta be a better way to mass-merge Array. stupid PHP.
-		$extensions = array_merge($extensions, $array);	
+		$extensions = array_merge($extensions, $array);
 	return $extensions;
 }
 
 // return 'image', 'video', 'audio', or 'unknown' etc. based on understood filetypes
 // TODO use mime_content_type() [DEPRECATED] or fullblown Fileinfo class from PECL
 function getFileType($filename) {
-	global $FILETYPES;	
+	global $FILETYPES;
 	$ext = strtolower(getFileExtension($filename));
 	foreach($FILETYPES as $type => $extensions) {
 		if(in_array($ext, $extensions)) {
@@ -691,7 +691,7 @@ function getFileType($filename) {
 
 
 
-/* 
+/*
 * PHP4<=>5 backwards compat
 * TODO: put into a different file.
 */
