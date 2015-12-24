@@ -259,22 +259,16 @@ class fuckflickr extends imageResize {
 	*/
 	function processImages() {
 		if ($this->dir != 'data' && sizeof($this->ff_items) > 0){
-			// check if directory is writable [halvfet]
-			if (!is_writable($this->dir)) {
-				debug('making directory writable');
-				chmod($this->dir, 0777);
-			}
-
 			// check if thumbs directory exists
 			if (!file_exists($this->dir_thumbs)) {
 				debug('making thumbs directory');
-				mkdir($this->dir_thumbs, 0777);
+				mkdir($this->dir_thumbs);
 			}
 
 			// check if web directory exists
 			if (!file_exists($this->dir_web)){
 				debug('making web directory');
-				mkdir($this->dir_web, 0777);
+				mkdir($this->dir_web);
 			}
 
 			$this->resize_count = 0;
@@ -580,7 +574,7 @@ class fuckflickr extends imageResize {
 			debug('making directory info file');
 			fwrite($r, $content);
 			fclose($r);
-			chmod($dir. FF_DIR_INFO_FILENAME, 0777);
+			chmod($dir. FF_DIR_INFO_FILENAME, 0644);
 
 			// reload information
 			$this->evalDirInfo($name, $dir, true);
